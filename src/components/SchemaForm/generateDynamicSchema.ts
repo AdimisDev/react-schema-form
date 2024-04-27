@@ -13,7 +13,7 @@ export const generateDynamicSchema = (
   const schemaObject = Object.fromEntries(
     fields.map((item) => {
       switch (item.type) {
-        case "string": {
+        case "text": {
           let stringValidation = z.string();
           item.validations?.forEach((fieldValidation) => {
             if (fieldValidation.type === "minLength") {

@@ -13,7 +13,7 @@ export interface IFieldSchema {
   helpText?: string;
   type?:
     | "password"
-    | "string"
+    | "text"
     | "email"
     | "textarea"
     | "select"

@@ -1,12 +1,34 @@
-# Packages
+# Open Source Projects (27 April 2024 - 27 May 2024)
 
 - [ ] Schema Form
 - [ ] Schema Table
-- [ ] Schema Sidebar
-- [ ] Schema Dashboard
 - [ ] Layouts
   - FlexboxGrid
+    - FlexboxGrid.Item
   - Grid
-  - Containers
-  - Stack
-- [ ] Final: Component Library
+    - Grid.Row
+    - Grid.Column
+  - PageContainer
+    - PageContainer.Section
+    - PageContainer.Sidebar
+    - PageContainer.Header
+    - PageContainer.Content
+    - PageContainer.Footer
+  - Stack (Both Horizontal and Vertical)
+    - Stack.Item
+  - Resource Content
+    - Table List Layout
+    - Card List Layout
+    - Form Layout
+- [ ] Schema Sidebar
+- [ ] Schema Dashboard
+- [ ] Saas web boilerplate built using above packages
+  - [ ] Stripe Subscription Integration
+  - [ ] Supabase Database, Auth and Storage Integration
+  - [ ] Product based Access Control
+  - [ ] Auth and No Auth Page Layout using Page Container
+  - [ ] Auth Pages Content using Schema Form.
+  - [ ] Analytics Dashboard Page Content using Schema Dashboard Package.
+  - [ ] Contacts Resource Page Content using Resource Tabular List Layout with it's create and edit page created using Resource Form Layout (`PBAC Implemented`).
+  - [ ] AI Playground Page built using components from shadcn and Grid Layout (`PBAC Implemented`).
+

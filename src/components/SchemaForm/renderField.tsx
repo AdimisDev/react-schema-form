@@ -39,7 +39,24 @@ const CustomField = (props: CustomFieldProps) => {
       )}
       <FormMessage />
     </FormItem>
-  ) : undefined;
+  ) : (
+    <FormItem>
+      {formItem.title && <FormLabel>{formItem.title}</FormLabel>}
+      <FormControl>
+        <Input
+          type={formItem.type}
+          disabled={formItem.disabled || loading}
+          placeholder={formItem.placeholder}
+          {...field}
+          onChange={(e) => field.onChange(e.target.value)}
+        />
+      </FormControl>
+      {formItem.description && (
+        <FormDescription>{formItem.description}</FormDescription>
+      )}
+      <FormMessage />
+    </FormItem>
+  );
 };
 
 const renderField = (
@@ -53,7 +70,7 @@ const renderField = (
   switch (formItem.type) {
     case "email":
     case "password":
-    case "string":
+    case "text":
       return (
         <FormItem>
           {formItem.title && <FormLabel>{formItem.title}</FormLabel>}
