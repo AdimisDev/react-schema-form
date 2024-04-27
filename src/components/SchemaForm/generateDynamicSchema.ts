@@ -1,7 +1,15 @@
 import { z } from "zod";
 import { IFieldSchema } from "./SchemaForm.interface";
 
-export const generateDynamicSchema = (fields: IFieldSchema[]) => {
+export const generateDynamicSchema = (
+  fields: IFieldSchema[]
+): z.ZodObject<
+  any,
+  "strip",
+  z.ZodTypeAny,
+  Record<string, any>,
+  Record<string, any>
+> => {
   const schemaObject = Object.fromEntries(
     fields.map((item) => {
       switch (item.type) {

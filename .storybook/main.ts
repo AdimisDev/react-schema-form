@@ -17,7 +17,7 @@ const config: StorybookConfig = {
     autodocs: "tag",
   },
   viteFinal: async (config, { configType }) => {
-    const customConfig = require('./vite.config');
+    const customConfig = require('../vite.config');
     return { ...config, ...customConfig };
   },
 };

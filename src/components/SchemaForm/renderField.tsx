@@ -1,7 +1,13 @@
 import { ControllerRenderProps, FieldValues } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { FormControl, FormItem, FormLabel } from "@/components/ui/form";
+import {
+  FormControl,
+  FormDescription,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
@@ -20,7 +26,21 @@ import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Textarea } from "@/components/ui/textarea";
-import { IFieldSchema } from "./SchemaForm.interface";
+import { IFieldSchema, CustomFieldProps } from "./SchemaForm.interface";
+
+const CustomField = (props: CustomFieldProps) => {
+  const { field, loading, formItem } = props;
+  return formItem.render ? (
+    <FormItem>
+      {formItem.title && <FormLabel>{formItem.title}</FormLabel>}
+      <FormControl>{formItem.render(formItem, field, loading)}</FormControl>
+      {formItem.description && (
+        <FormDescription>{formItem.description}</FormDescription>
+      )}
+      <FormMessage />
+    </FormItem>
+  ) : undefined;
+};
 
 const renderField = (
   formItem: IFieldSchema,
@@ -46,6 +66,10 @@ const renderField = (
               onChange={(e) => field.onChange(e.target.value)}
             />
           </FormControl>
+          {formItem.description && (
+            <FormDescription>{formItem.description}</FormDescription>
+          )}
+          <FormMessage />
         </FormItem>
       );
     case "select":
@@ -72,6 +96,10 @@ const renderField = (
               </SelectContent>
             </Select>
           </FormControl>
+          {formItem.description && (
+            <FormDescription>{formItem.description}</FormDescription>
+          )}
+          <FormMessage />
         </FormItem>
       );
     case "textarea":
@@ -85,29 +113,39 @@ const renderField = (
               {...field}
             />
           </FormControl>
+          {formItem.description && (
+            <FormDescription>{formItem.description}</FormDescription>
+          )}
+          <FormMessage />
         </FormItem>
       );
     case "radio group":
       return (
         <FormItem>
           {formItem.title && <FormLabel>{formItem.title}</FormLabel>}
-          <RadioGroup
-            defaultValue={field.value}
-            onValueChange={field.onChange}
-            disabled={formItem.disabled || loading}
-          >
-            {formItem.options?.map((option) => (
-              <div key={option.value} className="flex items-center space-x-2">
-                <RadioGroupItem
-                  value={option.value}
-                  id={`${formItem.key}-${option.value}`}
-                />
-                <Label htmlFor={`${formItem.key}-${option.value}`}>
-                  {option.label}
-                </Label>
-              </div>
-            ))}
-          </RadioGroup>
+          <FormControl>
+            <RadioGroup
+              defaultValue={field.value}
+              onValueChange={field.onChange}
+              disabled={formItem.disabled || loading}
+            >
+              {formItem.options?.map((option) => (
+                <div key={option.value} className="flex items-center space-x-2">
+                  <RadioGroupItem
+                    value={option.value}
+                    id={`${formItem.key}-${option.value}`}
+                  />
+                  <Label htmlFor={`${formItem.key}-${option.value}`}>
+                    {option.label}
+                  </Label>
+                </div>
+              ))}
+            </RadioGroup>
+          </FormControl>
+          {formItem.description && (
+            <FormDescription>{formItem.description}</FormDescription>
+          )}
+          <FormMessage />
         </FormItem>
       );
     case "date":
@@ -139,10 +177,21 @@ const renderField = (
               </PopoverContent>
             </Popover>
           </FormControl>
+          {formItem.description && (
+            <FormDescription>{formItem.description}</FormDescription>
+          )}
+          <FormMessage />
         </FormItem>
       );
     default:
-      return <div>Unsupported field type</div>;
+      return (
+        <CustomField
+          field={field}
+          formItem={formItem}
+          key={formItem.key}
+          loading={loading}
+        />
+      );
   }
 };
 

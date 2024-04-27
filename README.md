@@ -2,267 +2,176 @@
 
 ## Tech Stack
 
-- React Use Form
-- Shadcn
+- React Hook Form
+- Chakra UI
 - Zod
 - React
-- Typescript
-- usehooks
+- TypeScript
+- useHooks
 - Storybook
 - Vite
 
-## Features
+## Technical Features
 
-- Generate beautiful form with fluid layout and customizable buttons.
-- Form state management in localstorage or sessionStorage so that formValues are not refreshed when screen reloads.
-- Field validation using zod, with both realtime and submit validation.
+- [ ] Fluid: All fields automatically adjust their width to fully cover the form.
+- [ ] Panel: Form inside a Card.
+- [ ] State Persist: By default persist the form response in localstorage, and can switch between sessionStorage or nothing using `persistFormResponse: 'localStorage' | 'sessionStorage' | null` of `ISchemaForm`.
+- [x] Predefined Field Zod Validation: Dynamically generate validation schema for all the predefined field based on provided `validations` of `IFieldSchema` for zodResolver to be used as a resolver for useForm of React Hook Form.
+- [x] Render Custom Fields: Render custom form fields using a render prop.
+- [ ] Custom Field Zod Validation: Dynamically generate validation schema for field rendered using `render` prop of `IFieldSchema` based on provided `validations` of `IFieldSchema` for zodResolver to be used as a resolver for useForm of React Hook Form.
+- [ ] Conditional Field Display: Display the field only if a certain condition is met.
+- [ ] Conditional Validation Check Toggle: Toggle the validation check for a field, if defined, based on whether a certain condition is met.
+- [ ] Multi Step Form: Pass the `steps: string[]` prop in ISchemaForm split the form fields into groups and present the form as a multi step form, with each step having it's own group.
 
-## Form Fields
+### Form Fields
 
-- [x] Input
+All fields include all functionalities from either the rsuite or any popular package based on the field type.
+
+- [ ] Input
 - [ ] Input Number
-- [ ] Input OTP
-- [x] Input Textarea
-- [-] Select Picker
-- [x] RadioGroup
+- [ ] OTP Input
+- [ ] Textarea Input
+- [ ] Select Picker
+- [ ] Radio Group
 - [ ] Toggle
 - [ ] Checkbox
-- [ ] Files Uploader
-- [ ] Tags Picker
+- [ ] File Uploader
+- [ ] Date Picker
+- [ ] Date Range Picker
+- [ ] Captcha/ReCaptcha
+- [ ] Color Picker
+- [ ] Tag Picker
+- [ ] Slider
+<!-- - [ ] Currency Picker
+- [ ] Phone Number Picker
 - [ ] Time Picker
 - [ ] Time Range Picker
-- [-] Date Picker
-- [ ] Date Range Picker
-- [ ] Currency Picker
-- [ ] Phone Number Picker
-- [ ] Color Picker
-- [ ] Slider
-- [ ] Captcha/ReCaptcha
 - [ ] Map Picker
+- [ ] Credit Card Picker -->
 
-## Props
+### Validation Types
 
-### ISchemaForm
+### Props
 
-### IFieldSchema
+```ts
+import { ReactNode } from "react";
+import {
+  ControllerRenderProps,
+  FieldErrors,
+  FieldValues,
+} from "react-hook-form";
+import { ButtonProps } from "../ui/button";
 
-## Example Usage
+export interface IFieldSchema {
+  key?: string;
+  title?: string;
+  helpText?: string;
+  type?:
+    | "password"
+    | "string"
+    | "email"
+    | "textarea"
+    | "select"
+    | "multi-select"
+    | "radio group"
+    | "file"
+    | "boolean"
+    | "range"
+    | "date"
+    | "time";
+  placeholder?: string;
+  defaultValue?: string | Array<any>;
+  options?: Array<{
+    label: string;
+    value: string;
+  }>;
+  disabled?: boolean;
+  validations?: Array<{
+    type: "required" | "minLength" | "maxLength" | "optional";
+    message?: string;
+    value?: number | string;
+  }>;
+  seperator?: boolean;
+  // `render` prop usage example
+  /*
+  Example-1:
+    render: (formItem, field, loading) => (
+      <Input
+        type={formItem.type}
+        disabled={formItem.disabled || loading}
+        placeholder={formItem.placeholder}
+        {...field}
+        onChange={(e) => field.onChange(e.target.value)}
+      />
+    )
 
-### Custom
+  Example-2:
 
-```typescript
-const schemaFormProps: ISchemaForm = {
-  schema: [
-    {
-      key: "password",
-      title: "password",
-      helpText: "Enter password",
-      type: "password",
-      placeholder: "Enter your password",
-      defaultValue: "123",
-      options: [
-        {
-          label: "Option 1",
-          value: "option_1",
-        },
-      ],
-      disabled: false,
-      validations: [
-        {
-          type: "required",
-          message: "This field is required",
-        },
-        {
-          type: "minLength",
-          value: 6,
-          message: "Minimum length is 6",
-        },
-      ],
-    },
-    {
-      key: "username",
-      title: "username",
-      helpText: "Enter username",
-      type: "string",
-      placeholder: "Enter your username please",
-      defaultValue: "456789",
-      options: [
-        {
-          label: "Option 1",
-          value: "option_1",
-        },
-      ],
-      disabled: false,
-      validations: [
-        {
-          type: "required",
-          message: "username required hai bhai",
-        },
-        {
-          type: "minLength",
-          value: 6,
-          message: "bhot jyada hi chota h, min 6 likh le bhai",
-        },
-        {
-          type: "maxLength",
-          value: 10,
-          message: "max length 10 hai bhai, thik krle",
-        },
-      ],
-    },
-    {
-      key: "email",
-      title: "email",
-      helpText: "Enter email",
-      type: "email",
-      placeholder: "Enter your email please",
-      defaultValue: "",
-      options: [
-        {
-          label: "Option 1",
-          value: "option_1",
-        },
-      ],
-      disabled: false,
-      validations: [
-        {
-          type: "required",
-          message: "email is required, please enter a valid email",
-        },
-      ],
-    },
-    {
-      key: "string",
-      title: "textarea",
-      helpText: "Enter password",
-      type: "textarea",
-      placeholder: "Enter your password",
-      defaultValue: "",
-      options: [
-        {
-          label: "Option 1",
-          value: "option_1",
-        },
-      ],
-      disabled: false,
-      validations: [
-        {
-          type: "required",
-          message: "This field is required",
-        },
-        {
-          type: "minLength",
-          value: 6,
-          message: "Minimum length is 6",
-        },
-      ],
-    },
-    {
-      key: "string2",
-      title: "input date",
-      helpText: "Enter password",
-      type: "textarea",
-      placeholder: "Enter your password",
-      defaultValue: "",
-      options: [
-        {
-          label: "Option 1",
-          value: "option_1",
-        },
-      ],
-      disabled: false,
-      validations: [
-        {
-          type: "required",
-          message: "This field is required",
-        },
-        {
-          type: "minLength",
-          value: 6,
-          message: "Minimum length is 6",
-        },
-      ],
-    },
-    {
-      key: "select_field",
-      title: "Select Field",
-      helpText: "Select an option",
-      type: "select",
-      placeholder: "Select an option",
-      defaultValue: "something",
-      options: [
-        {
-          label: "Something",
-          value: "something",
-        },
-        {
-          label: "Something else",
-          value: "something_else",
-        },
-      ],
-      disabled: false,
-      validations: [
-        {
-          type: "required",
-          message: "This field is required",
-        },
-      ],
-    },
-  ],
-  onSubmit: (values) =>
-    console.log("Example Form Response: ", JSON.stringify(values)),
-};
-```
+    render: (formItem, field, loading) => (
+      <Select
+        disabled={formItem.disabled || loading}
+        defaultValue={field.value}
+        onValueChange={field.onChange}
+      >
+        <SelectTrigger>
+          <SelectValue
+            placeholder={formItem.placeholder || "Select option"}
+          />
+        </SelectTrigger>
+        <SelectContent position="popper">
+          {formItem.options?.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    )
+  */
+  render?: (
+    formItem: IFieldSchema,
+    field: ControllerRenderProps<FieldValues, string>,
+    loading?: boolean
+  ) => React.ReactNode;
+}
 
-### Login
+export interface CustomFieldProps {
+  field: ControllerRenderProps<FieldValues, string>;
+  formItem: IFieldSchema;
+  loading?: boolean;
+}
 
-```typescript
-import { ISchemaForm } from "@/components/SchemaForm/SchemaForm.interface";
-
-export const loginFormProps: ISchemaForm = {
-  schema: [
-    {
-      key: "email",
-      title: "Email",
-      helpText: "Enter your email",
-      type: "email",
-      placeholder: "Enter your email",
-      defaultValue: "abc@gmail.com",
-      disabled: false,
-      validations: [
-        {
-          type: "required",
-          message: "Email is required",
-        },
-        {
-          type: "minLength",
-          value: 3,
-          message: "Email must be at least 3 characters long",
-        },
-      ],
-    },
-    {
-      key: "password",
-      title: "Password",
-      helpText: "Enter your password",
-      type: "password",
-      placeholder: "Enter your password",
-      defaultValue: "123456",
-      disabled: false,
-      validations: [
-        {
-          type: "required",
-          message: "Password is required",
-        },
-        {
-          type: "minLength",
-          value: 6,
-          message: "Password must be at least 6 characters long",
-        },
-      ],
-    },
-  ],
-  onSubmit: (values) =>
-    console.log("Login Form Response: ", JSON.stringify(values)),
-};
+export interface ISchemaForm {
+  schema: IFieldSchema[];
+  settings?: {
+    formName?: string;
+    devTools?: boolean;
+    defaultFormValues?: Record<string, any>;
+    loading?: boolean;
+    className?: string;
+    centered?: boolean;
+  };
+  callbacks?: {
+    onSubmit: (values: Record<string, any>) => Promise<void> | void;
+    onChange?: (
+      formResponse: Record<string, any>,
+      fieldValidations: FieldErrors<{ [x: string]: any }>
+    ) => void;
+  };
+  footer?: {
+    submit?: {
+      submitButtonClassName?: string;
+      submitButtonVarient?: ButtonProps["variant"];
+      submitButtonName?: string | ReactNode;
+      disableSubmit?: boolean;
+    };
+    buttons?: React.ReactNode[];
+    checkboxes?: {
+      text: string;
+      default: boolean;
+      onChange: (value: boolean) => void;
+    }[];
+    links?: React.ReactNode[];
+  };
+}
 ```
