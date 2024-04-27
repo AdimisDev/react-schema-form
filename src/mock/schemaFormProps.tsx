@@ -1,6 +1,8 @@
 import { ISchemaForm } from "@/components/SchemaForm/SchemaForm.interface";
+import { Button } from "@/components/ui/button";
 
 export const schemaFormProps: ISchemaForm = {
+  formName: "example-form",
   schema: [
     {
       key: "password",
@@ -32,7 +34,7 @@ export const schemaFormProps: ISchemaForm = {
       key: "username",
       title: "username",
       helpText: "Enter username",
-      type: "string",
+      type: "text",
       placeholder: "Enter your username please",
       defaultValue: "456789",
       options: [
@@ -158,6 +160,86 @@ export const schemaFormProps: ISchemaForm = {
       ],
     },
   ],
+  persistFormResponse: "sessionStorage",
+  width: "100%",
+  devTools: true,
   onSubmit: (values) =>
     console.log("Example Form Response: ", JSON.stringify(values)),
+  onValidationError: (errors) =>
+    console.error("Form Validation Error: ", JSON.stringify(errors, null, 4)),
+  renderButtons: (formData, handleSubmit) => {
+    const buttons: React.ReactNode[] = [];
+
+    buttons.push(
+      <Button
+        key="With Validation"
+        onClick={() =>
+          handleSubmit((formData) =>
+            console.log("With Validation:", formData)
+          )()
+        }
+        className="w-full"
+      >
+        Okay
+      </Button>
+    );
+
+    if (Object.keys(formData).length > 0) {
+      buttons.push(
+        <Button
+          key="reset"
+          onClick={() => console.log("Form data reset", formData)}
+          className="w-full"
+        >
+          Reset
+        </Button>
+      );
+    }
+
+    if (formData.email && formData.email.trim()) {
+      buttons.push(
+        <Button
+          key="special"
+          onClick={() => console.log("Special action for email", formData)}
+          className="w-full"
+        >
+          Special Email Action
+        </Button>
+      );
+    }
+
+    buttons.push(
+      <Button
+        key="something"
+        onClick={() => console.log("Okay:", formData)}
+        className="w-full"
+      >
+        Something
+      </Button>
+    );
+
+    return buttons;
+  },
+  checkboxes: {
+    aboveButtons: false,
+    className: "flex justify-between items-center mt-5",
+    fluid: true,
+    items: [
+      {
+        key: "terms",
+        defaultValue: true,
+        title: "Accept terms and conditions",
+      },
+      {
+        key: "privacy_policy",
+        defaultValue: false,
+        title: "Accept privacy policies",
+      },
+      {
+        key: "privacy_policy_new",
+        defaultValue: false,
+        title: "Accept privacy policies",
+      },
+    ],
+  },
 };

@@ -13,8 +13,6 @@
 
 ## Technical Features
 
-- [ ] Fluid: All fields automatically adjust their width to fully cover the form.
-- [ ] Panel: Form inside a Card.
 - [ ] State Persist: By default persist the form response in localstorage, and can switch between sessionStorage or nothing using `persistFormResponse: 'localStorage' | 'sessionStorage' | null` of `ISchemaForm`.
 - [x] Predefined Field Zod Validation: Dynamically generate validation schema for all the predefined field based on provided `validations` of `IFieldSchema` for zodResolver to be used as a resolver for useForm of React Hook Form.
 - [x] Render Custom Fields: Render custom form fields using a render prop.
@@ -22,6 +20,8 @@
 - [ ] Conditional Field Display: Display the field only if a certain condition is met.
 - [ ] Conditional Validation Check Toggle: Toggle the validation check for a field, if defined, based on whether a certain condition is met.
 - [ ] Multi Step Form: Pass the `steps: string[]` prop in ISchemaForm split the form fields into groups and present the form as a multi step form, with each step having it's own group.
+- [ ] Fluid: All fields automatically adjust their width to fully cover the form.
+- [ ] Panel: Form inside a Card.
 
 ### Form Fields
 

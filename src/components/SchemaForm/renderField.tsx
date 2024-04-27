@@ -37,7 +37,7 @@ const CustomField = (props: CustomFieldProps) => {
       {formItem.description && (
         <FormDescription>{formItem.description}</FormDescription>
       )}
-      <FormMessage />
+      {props.showValidationErrors && <FormMessage />}
     </FormItem>
   ) : (
     <FormItem>
@@ -54,7 +54,7 @@ const CustomField = (props: CustomFieldProps) => {
       {formItem.description && (
         <FormDescription>{formItem.description}</FormDescription>
       )}
-      <FormMessage />
+      {props.showValidationErrors && <FormMessage />}
     </FormItem>
   );
 };
@@ -62,11 +62,9 @@ const CustomField = (props: CustomFieldProps) => {
 const renderField = (
   formItem: IFieldSchema,
   field: ControllerRenderProps<FieldValues, string>,
+  showValidationErrors?: boolean,
   loading?: boolean
 ) => {
-  console.log("Render Field FormItem: ", formItem);
-  console.log("Render Field Field: ", field);
-
   switch (formItem.type) {
     case "email":
     case "password":
@@ -86,7 +84,7 @@ const renderField = (
           {formItem.description && (
             <FormDescription>{formItem.description}</FormDescription>
           )}
-          <FormMessage />
+          {showValidationErrors && <FormMessage />}
         </FormItem>
       );
     case "select":
@@ -116,7 +114,7 @@ const renderField = (
           {formItem.description && (
             <FormDescription>{formItem.description}</FormDescription>
           )}
-          <FormMessage />
+          {showValidationErrors && <FormMessage />}
         </FormItem>
       );
     case "textarea":
@@ -133,7 +131,7 @@ const renderField = (
           {formItem.description && (
             <FormDescription>{formItem.description}</FormDescription>
           )}
-          <FormMessage />
+          {showValidationErrors && <FormMessage />}
         </FormItem>
       );
     case "radio group":
@@ -162,7 +160,7 @@ const renderField = (
           {formItem.description && (
             <FormDescription>{formItem.description}</FormDescription>
           )}
-          <FormMessage />
+          {showValidationErrors && <FormMessage />}
         </FormItem>
       );
     case "date":
@@ -197,7 +195,7 @@ const renderField = (
           {formItem.description && (
             <FormDescription>{formItem.description}</FormDescription>
           )}
-          <FormMessage />
+          {showValidationErrors && <FormMessage />}
         </FormItem>
       );
     default:

@@ -1,8 +1,10 @@
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 import {
   ControllerRenderProps,
   FieldErrors,
   FieldValues,
+  UseFormHandleSubmit,
+  UseFormReturn,
 } from "react-hook-form";
 import { ButtonProps } from "../ui/button";
 
@@ -23,9 +25,10 @@ export interface IFieldSchema {
     | "boolean"
     | "range"
     | "date"
+    | "boolean"
     | "time";
   placeholder?: string;
-  defaultValue?: string | Array<any>;
+  defaultValue?: string | number | boolean | Array<any>;
   options?: Array<{
     label: string;
     value: string;
@@ -86,58 +89,56 @@ export interface IFieldSchema {
 export interface CustomFieldProps {
   field: ControllerRenderProps<FieldValues, string>;
   formItem: IFieldSchema;
+  showValidationErrors?: boolean;
   loading?: boolean;
 }
 
 export interface ISchemaForm {
+  formName: string;
   schema: IFieldSchema[];
-  formName?: string;
-  devTools?: boolean;
-  className?: string;
-  centered?: boolean;
-  disableSubmit?: boolean;
-  defaultFormValues?: Record<string, any>;
-  submitButtonClassName?: string;
-  submitButtonVarient?: ButtonProps["variant"];
-  submitButtonName?: string | ReactNode;
-  loading?: boolean;
-  onSubmit: (values: Record<string, any>) => Promise<void> | void;
-  onChange?: (
-    formResponse: Record<string, any>,
-    fieldValidations: FieldErrors<{ [x: string]: any }>
-  ) => void;
-}
-
-export interface INewSchemaForm {
-  formName?: string;
-  schema: IFieldSchema[];
-  height?: string | number;
   width?: string | number;
   multiStepFormSteps?: IFieldSchema["key"][];
-  persistFormResponse: "localStorage" | "sessionStorage" | null;
+  persistFormResponse?: "localStorage" | "sessionStorage" | undefined;
   submitButton?: {
     submitButtonClassName?: string;
     submitButtonVarient?: ButtonProps["variant"];
     submitButtonName?: string | ReactNode;
     hideSubmit?: boolean;
   };
-  buttons?: React.ReactNode[];
-  links?: React.ReactNode[];
+  links?: React.ReactNode;
   checkboxes?: {
-    text: string;
-    default: boolean;
-    onChange: (value: boolean) => void;
-  }[];
+    aboveButtons?: boolean;
+    aboveLinks?: boolean;
+    className?: string;
+    fluid?: boolean;
+    items: IFieldSchema[];
+  };
   onSubmit: (values: Record<string, any>) => Promise<void> | void;
   onChange?: (
     formResponse: Record<string, any>,
     fieldValidations: FieldErrors<{ [x: string]: any }>
   ) => void;
-  onValidationError?: () => void;
+  onValidationError?: (errors: any) => void;
+  renderButtons?: (
+    formData: Record<string, any>,
+    handleSubmit: UseFormHandleSubmit<Record<string, any>, undefined>
+  ) => React.ReactNode[];
   fluid?: boolean;
   panel?: boolean;
-  loading?: boolean;
   centered?: boolean;
   devTools?: boolean;
   showValidationErrors?: boolean;
+  className?: string;
+  header?: React.ReactNode;
+  renderFooter?: (formResponse: Record<string, any>) => React.ReactNode;
+}
+
+export interface SchemaFormFooterProps {
+  formResponse: Record<string, any>;
+  submitButtonLoading?: boolean;
+  submitButton?: ISchemaForm["submitButton"];
+  renderButtons?: ISchemaForm["renderButtons"];
+  setSubmitButtonLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  form: UseFormReturn<Record<string, any>, any, undefined>;
+  onSubmit: (values: Record<string, any>) => void | Promise<void>;
 }
