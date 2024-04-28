@@ -1,4 +1,4 @@
-import { ISchemaFormProps } from "@/interfaces/SchemaForm.interface";
+import { ISchemaFormProps } from "@/components/SchemaForm/interface";
 import { z } from "zod";
 
 const formValidations = {

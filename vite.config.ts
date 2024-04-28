@@ -11,7 +11,7 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: path.resolve(__dirname, "index.ts"),
+      entry: path.resolve(__dirname, "./src/index.ts"),
       name: "Adimis|React-Schema-Form",
       fileName: (format) => `index.${format}.js`,
     },

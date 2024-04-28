@@ -1,24 +1,27 @@
 {
-  "name": "react-schema-form",
-  "author": "adimis",
+  "name": "@adimis/react-schema-form",
+  "author": "AdimisDev",
   "private": false,
-  "version": "0.0.0",
+  "version": "0.2.3",
   "type": "module",
   "main": "dist/index.umd.js",
-  "module": "dist/index.es.js",
-  "exports": {
-    ".": {
-      "import": "./dist/index.es.js",
-      "require": "./dist/index.umd.js"
-    }
-  },
-  "files": [
-    "/dist",
-    "Readme.md"
-  ],
+  "types": "dist/src/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
+  "keywords": [
+    "react",
+    "react-schema-form",
+    "zod-validation"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AdimisDev/react-schema-form.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AdimisDev/react-schema-form/issues"
+  },
+  "homepage": "https://github.com/AdimisDev/react-schema-form/blob/main/README.md",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -28,6 +31,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@hookform/devtools": "^4.3.1",
     "@hookform/resolvers": "^3.3.4",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-label": "^2.0.2",
@@ -37,6 +41,8 @@
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tabs": "^1.0.4",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
@@ -50,9 +56,13 @@
     "vite-plugin-dts": "^3.9.0",
     "zod": "^3.23.4"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "devDependencies": {
     "@chromatic-com/storybook": "^1.3.3",
-    "@hookform/devtools": "^4.3.1",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-typescript": "^11.1.6",
     "@storybook/addon-essentials": "^8.0.9",
     "@storybook/addon-interactions": "^8.0.9",
     "@storybook/addon-links": "^8.0.9",
@@ -73,6 +83,8 @@
     "eslint-plugin-react-refresh": "^0.4.6",
     "eslint-plugin-storybook": "^0.8.0",
     "postcss": "^8.4.38",
+    "rollup": "^4.17.0",
+    "rollup-plugin-postcss": "^4.0.2",
     "storybook": "^8.0.9",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.2.2",

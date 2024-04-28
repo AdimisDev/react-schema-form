@@ -6,7 +6,7 @@ import {
   UseFormHandleSubmit,
   UseFormReturn,
 } from "react-hook-form";
-import { ButtonProps } from "../components/ui/button";
+import { ButtonProps } from "../ui/button";
 import { z } from "zod";
 
 export interface IFieldSchema {

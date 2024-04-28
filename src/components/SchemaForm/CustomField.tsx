@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/input";
-import { CustomFieldProps } from "../../interfaces/SchemaForm.interface";
+import { CustomFieldProps } from "./interface";
 
 const CustomField = (props: CustomFieldProps) => {
   const { field, loading, formItem } = props;

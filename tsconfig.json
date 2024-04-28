@@ -24,8 +24,10 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "declaration": true,
+    "declarationDir": "dist",
   },
-  "include": ["src"],
+  "include": ["."],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

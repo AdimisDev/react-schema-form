@@ -1,5 +1,5 @@
 import SchemaForm from "@/components/SchemaForm/SchemaForm";
-import { ISchemaFormProps } from "@/interfaces/SchemaForm.interface";
+import { ISchemaFormProps } from "@/components/SchemaForm/interface";
 
 const SchemaFormStory = (props: ISchemaFormProps) => {
   return <SchemaForm {...props} />;
