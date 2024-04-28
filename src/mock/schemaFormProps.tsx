@@ -24,8 +24,7 @@ const formValidations = {
     .string()
     .min(8, "Password should be at least 8 characters")
     .max(20, "Password must not exceed 20 characters"),
-  terms: z
-    .boolean()
+  terms: z.boolean(),
 };
 
 export const schemaFormProps: ISchemaForm = {
@@ -33,19 +32,10 @@ export const schemaFormProps: ISchemaForm = {
   panel: true,
   schema: [
     {
-      key: "password",
-      title: "Password",
-      helpText: "Enter your password",
-      type: "password",
-      placeholder: "Enter your password",
-      defaultValue: "",
-      disabled: false,
-      validations: formValidations.password,
-    },
-    {
       key: "username",
       title: "Username",
       helpText: "Enter your username",
+      autoComplete: "username",
       type: "text",
       placeholder: "Enter your username",
       defaultValue: "",
@@ -61,6 +51,24 @@ export const schemaFormProps: ISchemaForm = {
       defaultValue: "",
       disabled: false,
       validations: formValidations.email,
+    },
+    {
+      key: "password",
+      title: "Password",
+      helpText: "Enter your password",
+      type: "password",
+      placeholder: "Enter your password",
+      defaultValue: "",
+      autoComplete: "new-password",
+      disabled: false,
+      validations: formValidations.password,
+      displayConditions: [
+        {
+          dependentField: "email",
+          dependentFieldValue: "admin@adimis.in",
+          operator: "===",
+        },
+      ],
     },
     {
       key: "address",
@@ -151,7 +159,7 @@ export const schemaFormProps: ISchemaForm = {
         key: "terms",
         title: "Accept terms and conditions",
         validations: formValidations.terms,
-        type: 'boolean'
+        type: "boolean",
       },
       {
         key: "privacy_policy",

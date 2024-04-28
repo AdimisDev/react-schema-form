@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { HTMLInputAutoCompleteAttribute, ReactNode } from "react";
 import {
   ControllerRenderProps,
   FieldErrors,
@@ -14,6 +14,7 @@ export interface IFieldSchema {
   title?: string;
   description?: string;
   helpText?: string;
+  autoComplete?: HTMLInputAutoCompleteAttribute;
   type?:
     | React.HTMLInputTypeAttribute
     | "textarea"
@@ -74,6 +75,12 @@ export interface IFieldSchema {
     field: ControllerRenderProps<FieldValues, string>,
     loading?: boolean
   ) => React.ReactNode;
+  displayConditions?: {
+    dependentField: string;
+    operator: "===" | "!==" | "<" | "<=" | ">" | ">=";
+    dependentFieldValue: string;
+    relation?: "and";
+  }[];
 }
 
 export interface CustomFieldProps {
@@ -120,7 +127,7 @@ export interface ISchemaForm {
       stageLabel?: string;
       fields?: IFieldSchema["key"][];
     }
-  >; // TODO:
+  >;
 
   // Props for schema form header and footer
   header?: React.ReactNode;

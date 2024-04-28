@@ -45,6 +45,7 @@ const CustomField = (props: CustomFieldProps) => {
       <FormControl>
         <Input
           type={formItem.type}
+          autoComplete={formItem.autoComplete}
           disabled={formItem.disabled || loading}
           placeholder={formItem.placeholder}
           {...field}
@@ -75,6 +76,7 @@ const renderField = (
           <FormControl>
             <Input
               type={formItem.type}
+              autoComplete={formItem.autoComplete}
               disabled={formItem.disabled || loading}
               placeholder={formItem.placeholder}
               {...field}

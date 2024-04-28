@@ -11,6 +11,7 @@ import SchemaFormFooter from "./SchemaFormFooter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
+import { updateFieldVisibility } from "@/utils/updateFieldVisibility";
 
 export default function SchemaForm({
   schema,
@@ -55,14 +56,29 @@ export default function SchemaForm({
 
   const allFields = checkboxes ? [...schema, ...checkboxes.items] : schema;
   const zodSchema = generateDynamicSchema(allFields);
-  console.log("Zod Schema: ", zodSchema);
-  console.log("Initial Form Response: ", initialFormValues)
   const form = useForm<z.infer<typeof zodSchema>>({
     resolver: zodResolver(zodSchema),
     mode: "onChange",
     reValidateMode: "onSubmit",
     defaultValues: initialFormValues,
   });
+
+  const [formResponse, setFormResponse] = useState<Record<string, any>>({});
+
+  const [visibleFields, setVisibleFields] = useState(
+    new Set(schema.map((item) => item.key))
+  );
+
+  // TODO:
+
+  /* Every field has displayConditions prop, based on that conditionally display the field.
+  displayConditions?: {
+    dependsOnField: string;
+    operator: "===" | "!==" | "<" | "<=" | ">" | ">=";
+    dependentFieldValue: string;
+    relation?: "and";
+  }[];
+  */
 
   function handleSubmit(values: z.infer<typeof zodSchema>) {
     if (onSubmit) {
@@ -111,7 +127,15 @@ export default function SchemaForm({
     } else if (persistFormResponse === "sessionStorage") {
       sessionStorage.setItem(formKey, JSON.stringify(watchFields));
     }
-  }, [formErrors, watchFields, onChange, persistFormResponse, formKey]);
+    if(JSON.stringify(watchFields) !== JSON.stringify(formResponse)){
+      setFormResponse(watchFields);
+    }
+  }, [formErrors, watchFields, onChange, persistFormResponse, formKey, formResponse]);
+
+  useEffect(() => {
+    updateFieldVisibility(schema, formResponse, setVisibleFields);
+  }, [schema, formResponse])
+  
 
   return (
     schema && (
@@ -149,7 +173,8 @@ export default function SchemaForm({
                       <TabsContent key={key} value={key}>
                         <div className="grid grid-row-* grid-col-* mt-5">
                           {value.fields?.map((fieldName) => {
-                            if (!fieldName) return null;
+                            if (!fieldName || !visibleFields.has(fieldName))
+                              return null;
                             const formItem = schema.find(
                               (item) => item.key === fieldName
                             );
@@ -205,16 +230,19 @@ export default function SchemaForm({
               ) : (
                 <>
                   <div className="grid grid-row-* grid-col-*">
-                    {schema.map((formItem) => (
-                      <FormField
-                        key={formItem.key}
-                        name={formItem.key as string}
-                        control={form.control}
-                        render={({ field }) =>
-                          renderField(formItem, field, showValidationErrors)
-                        }
-                      />
-                    ))}
+                    {schema.map(
+                      (formItem) =>
+                        visibleFields.has(formItem.key) && (
+                          <FormField
+                            key={formItem.key}
+                            name={formItem.key as string}
+                            control={form.control}
+                            render={({ field }) =>
+                              renderField(formItem, field, showValidationErrors)
+                            }
+                          />
+                        )
+                    )}
                   </div>
                   <SchemaFormFooter
                     formResponse={form.watch()}
