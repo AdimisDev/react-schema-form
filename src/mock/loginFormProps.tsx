@@ -1,7 +1,8 @@
 import { ISchemaForm } from "@/components/SchemaForm/SchemaForm.interface";
 
 export const loginFormProps: ISchemaForm = {
-  formName: 'example-form',
+  formName: "login-form",
+  header: <h2 className="text-3xl font-bold text-left">Login Form</h2>,
   schema: [
     {
       key: "email",

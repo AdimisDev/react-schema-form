@@ -21,6 +21,7 @@ function SchemaFormButtons({
         type="submit"
         variant={submitButton?.submitButtonVarient || "default"}
         loading={submitButtonLoading}
+        disabled={submitButton?.disabledSubmit}
       >
         {submitButton?.submitButtonName || "Submit"}
       </Button>

@@ -1,5 +1,32 @@
 import { ISchemaForm } from "@/components/SchemaForm/SchemaForm.interface";
 import { Button } from "@/components/ui/button";
+import { z } from "zod";
+
+// Zod schema for form validations
+const formValidations = {
+  username: z
+    .string()
+    .min(1, "Username is required")
+    .max(20, "Username must not exceed 20 characters"),
+  email: z
+    .string()
+    .email("Enter a valid email address")
+    .min(1, "Email is required"),
+  address: z
+    .string()
+    .min(10, "Address should be at least 10 characters")
+    .min(1, "Address is required"),
+  phone: z
+    .string()
+    .regex(/^\+?(\d.*){10,}$/, "Enter a valid phone number")
+    .min(1, "Phone number is required"),
+  password: z
+    .string()
+    .min(8, "Password should be at least 8 characters")
+    .max(20, "Password must not exceed 20 characters"),
+  terms: z
+    .boolean()
+};
 
 export const schemaFormProps: ISchemaForm = {
   formName: "example-form",
@@ -11,19 +38,9 @@ export const schemaFormProps: ISchemaForm = {
       helpText: "Enter your password",
       type: "password",
       placeholder: "Enter your password",
-      defaultValue: "123",
+      defaultValue: "",
       disabled: false,
-      validations: [
-        {
-          type: "required",
-          message: "This field is required",
-        },
-        {
-          type: "minLength",
-          value: 6,
-          message: "Minimum length is 6",
-        },
-      ],
+      validations: formValidations.password,
     },
     {
       key: "username",
@@ -33,22 +50,7 @@ export const schemaFormProps: ISchemaForm = {
       placeholder: "Enter your username",
       defaultValue: "",
       disabled: false,
-      validations: [
-        {
-          type: "required",
-          message: "Username is required",
-        },
-        {
-          type: "minLength",
-          value: 6,
-          message: "Minimum length is 6 characters",
-        },
-        {
-          type: "maxLength",
-          value: 10,
-          message: "Maximum length is 10 characters",
-        },
-      ],
+      validations: formValidations.username,
     },
     {
       key: "email",
@@ -58,17 +60,7 @@ export const schemaFormProps: ISchemaForm = {
       placeholder: "Enter your email",
       defaultValue: "",
       disabled: false,
-      validations: [
-        {
-          type: "required",
-          message: "Email is required, please enter a valid email",
-        },
-        {
-          type: "minLength",
-          value: 3,
-          message: "Email must be at least 3 characters long",
-        },
-      ],
+      validations: formValidations.email,
     },
     {
       key: "address",
@@ -78,12 +70,7 @@ export const schemaFormProps: ISchemaForm = {
       placeholder: "1234 Main St",
       defaultValue: "",
       disabled: false,
-      validations: [
-        {
-          type: "required",
-          message: "Address is required",
-        },
-      ],
+      validations: formValidations.address,
     },
     {
       key: "phone",
@@ -93,28 +80,9 @@ export const schemaFormProps: ISchemaForm = {
       placeholder: "Enter your phone number",
       defaultValue: "",
       disabled: false,
-      validations: [
-        {
-          type: "required",
-          message: "Phone number is required",
-        },
-      ],
+      validations: formValidations.phone,
     },
   ],
-  // multiStepFormSteps: {
-  //   stage_1: {
-  //     stageLabel: "Stage 1",
-  //     fields: ["username", "password"],
-  //   },
-  //   stage_2: {
-  //     stageLabel: "Stage 2",
-  //     fields: ["email"],
-  //   },
-  //   stage_3: {
-  //     stageLabel: "Stage 3",
-  //     fields: ["address", "phone"],
-  //   },
-  // },
   persistFormResponse: "sessionStorage",
   width: "100%",
   devTools: true,
@@ -181,8 +149,9 @@ export const schemaFormProps: ISchemaForm = {
     items: [
       {
         key: "terms",
-        defaultValue: true,
         title: "Accept terms and conditions",
+        validations: formValidations.terms,
+        type: 'boolean'
       },
       {
         key: "privacy_policy",

@@ -7,6 +7,7 @@ import {
   UseFormReturn,
 } from "react-hook-form";
 import { ButtonProps } from "../ui/button";
+import { z } from "zod";
 
 export interface IFieldSchema {
   key: string;
@@ -27,11 +28,7 @@ export interface IFieldSchema {
     value: string;
   }>;
   disabled?: boolean;
-  validations?: Array<{
-    type: "required" | "minLength" | "maxLength" | "optional";
-    message?: string;
-    value?: number | string;
-  }>;
+  validations?: z.ZodType<any, any>;
   seperator?: boolean; // TODO
   // render prop usage example
   /*
@@ -133,6 +130,7 @@ export interface ISchemaForm {
     submitButtonVarient?: ButtonProps["variant"];
     submitButtonName?: string | ReactNode;
     hideSubmit?: boolean;
+    disabledSubmit?: boolean;
   };
   renderButtons?: (
     formData: Record<string, any>,

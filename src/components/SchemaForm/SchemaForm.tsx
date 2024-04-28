@@ -53,7 +53,10 @@ export default function SchemaForm({
     Object.keys(multiStepFormSteps ? multiStepFormSteps : {})[0]
   );
 
-  const zodSchema = generateDynamicSchema(schema, checkboxes);
+  const allFields = checkboxes ? [...schema, ...checkboxes.items] : schema;
+  const zodSchema = generateDynamicSchema(allFields);
+  console.log("Zod Schema: ", zodSchema);
+  console.log("Initial Form Response: ", initialFormValues)
   const form = useForm<z.infer<typeof zodSchema>>({
     resolver: zodResolver(zodSchema),
     mode: "onChange",
@@ -144,7 +147,7 @@ export default function SchemaForm({
                     </TabsList>
                     {Object.entries(multiStepFormSteps).map(([key, value]) => (
                       <TabsContent key={key} value={key}>
-                        <div className="grid grid-row-* grid-col-*">
+                        <div className="grid grid-row-* grid-col-* mt-5">
                           {value.fields?.map((fieldName) => {
                             if (!fieldName) return null;
                             const formItem = schema.find(
@@ -154,8 +157,8 @@ export default function SchemaForm({
 
                             return (
                               <FormField
-                                key={fieldName}
-                                name={fieldName}
+                                key={formItem.key}
+                                name={formItem.key as string}
                                 control={form.control}
                                 render={({ field }) =>
                                   renderField(
@@ -186,19 +189,17 @@ export default function SchemaForm({
                     ))}
                   </Tabs>
                   <div className="flex justify-between mt-4">
-                    {!isLastStep && (
-                      <>
-                        <Button
-                          disabled={
-                            currentStep === Object.keys(multiStepFormSteps)[0]
-                          }
-                          onClick={handlePrev}
-                        >
-                          Prev
-                        </Button>
-                        <Button onClick={handleNext}>Next</Button>
-                      </>
-                    )}
+                    <Button
+                      disabled={
+                        currentStep === Object.keys(multiStepFormSteps)[0]
+                      }
+                      onClick={handlePrev}
+                    >
+                      Prev
+                    </Button>
+                    <Button onClick={handleNext} disabled={isLastStep}>
+                      Next
+                    </Button>
                   </div>
                 </>
               ) : (

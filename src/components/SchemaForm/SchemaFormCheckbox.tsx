@@ -12,7 +12,7 @@ function SchemaFormCheckbox({
 }) {
   return (
     <FormField
-      key={`${formItem.key}_form_field_${formItem.title}`}
+      key={formItem.key}
       name={formItem.key as string}
       control={control}
       render={({ field }) => (
@@ -20,17 +20,17 @@ function SchemaFormCheckbox({
           <FormControl>
             <div className="items-top flex space-x-2">
               <Checkbox
-                id={formItem.key + "checkbox"}
                 {...field}
-                defaultChecked={formItem.defaultValue === false ? false : true}
+                defaultChecked={field.value}
+                value={field.value}
                 onClick={() => {
-                  console.log("Checkbox onchange: ", !field.value)
+                  console.log("Checkbox onchange: ", !field.value);
                   field.onChange(!field.value);
                 }}
               />
               <div className="grid gap-1.5 leading-none">
                 <label
-                  htmlFor={formItem.key + "checkbox"}
+                  htmlFor={formItem.key}
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
                   {formItem.title}
