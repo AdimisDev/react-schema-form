@@ -1,4 +1,4 @@
-import { ISchemaFormProps } from "@/interfaces/SchemaForm.interface";
+import { ISchemaFormProps } from "@/components/SchemaForm/interface";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
 

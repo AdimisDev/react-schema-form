@@ -13,7 +13,7 @@ import {
 import { useRef, useState, useEffect } from "react";
 import { generateDynamicSchema } from "../../lib/utils/generateDynamicSchema";
 import renderField from "./renderField";
-import { ISchemaFormProps } from "../../interfaces/SchemaForm.interface";
+import { ISchemaFormProps } from "./interface";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import SchemaFormFooter from "./SchemaFormFooter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

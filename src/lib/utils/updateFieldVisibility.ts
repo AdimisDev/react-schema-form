@@ -1,4 +1,4 @@
-import { IFieldSchema } from "@/interfaces/SchemaForm.interface";
+import { IFieldSchema } from "@/components/SchemaForm/interface";
 import React from "react";
 
 export const updateFieldVisibility = (

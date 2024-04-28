@@ -1,2 +1,2 @@
-export * from "./App";
-export type * from "./interfaces/SchemaForm.interface";
+export * from "./components/SchemaForm/SchemaForm";
+export * from "./components/SchemaForm/interface";
