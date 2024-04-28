@@ -1,5 +1,5 @@
 import React from "react";
-import { SchemaFormFooterProps } from "./SchemaForm.interface";
+import { SchemaFormFooterProps } from "../../interfaces/SchemaForm.interface";
 import SchemaFormButtons from "./SchemaFormButtons";
 import SchemaFormCheckbox from "./SchemaFormCheckbox";
 

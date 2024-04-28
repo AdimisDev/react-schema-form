@@ -1,18 +1,29 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
-import { Form, FormField } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { useRef, useState, useEffect } from "react";
-import { generateDynamicSchema } from "./generateDynamicSchema";
+import { generateDynamicSchema } from "../../lib/utils/generateDynamicSchema";
 import renderField from "./renderField";
-import { ISchemaForm } from "./SchemaForm.interface";
+import { ISchemaForm } from "../../interfaces/SchemaForm.interface";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import SchemaFormFooter from "./SchemaFormFooter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
 // import { checkAndDisableValidation } from "@/utils/updateFieldVisibility";
-import { updateFieldVisibility } from "@/utils/updateFieldVisibility";
+import {
+  checkRemoveValidationCondition,
+  updateFieldVisibility,
+} from "@/lib/utils/updateFieldVisibility";
 
 export default function SchemaForm({
   schema,
@@ -85,44 +96,6 @@ export default function SchemaForm({
     }
   }
 
-  function checkRemoveValidationCondition(
-    data?: {
-      dependentField: string;
-      operator: "===" | "!==" | "<" | "<=" | ">" | ">=";
-      dependentFieldValue: any;
-      relation?: "and" | undefined;
-    }[],
-    formResponse?: Record<string, any>
-  ): boolean {
-    if (!data || !formResponse) {
-      return false;
-    }
-
-    const canRemoveError = data.every((condition) => {
-      const { dependentField, operator, dependentFieldValue } = condition;
-      const actualValue = formResponse[dependentField];
-
-      switch (operator) {
-        case "===":
-          return actualValue === dependentFieldValue;
-        case "!==":
-          return actualValue !== dependentFieldValue;
-        case "<":
-          return actualValue < dependentFieldValue;
-        case "<=":
-          return actualValue <= dependentFieldValue;
-        case ">":
-          return actualValue > dependentFieldValue;
-        case ">=":
-          return actualValue >= dependentFieldValue;
-        default:
-          return false;
-      }
-    });
-
-    return canRemoveError;
-  }
-
   function handleInvalidSubmit(errors: Record<string, any>) {
     if (onSubmit) {
       const formResponse = form.watch();
@@ -181,12 +154,17 @@ export default function SchemaForm({
     }
   }
 
+  // Form Variables
+  const watchFields = form.watch();
+  const formErrors = form.formState.errors;
+
+  // Layout Variables
   const Container = panel ? Card : "div";
   const ContainerContent = panel ? CardContent : "div";
   const ContainerHeader = panel ? CardHeader : "div";
 
+  // Multi Step Form Variables
   const stepKeys = Object.keys(multiStepFormSteps ? multiStepFormSteps : {});
-
   const isLastStep = currentStep === stepKeys[stepKeys.length - 1];
 
   const handleNext = () => {
@@ -205,8 +183,6 @@ export default function SchemaForm({
     }
   };
 
-  const watchFields = form.watch();
-  const formErrors = form.formState.errors;
   useEffect(() => {
     if (onChange) {
       onChange(watchFields, formErrors, canIgnoreErrors);
@@ -230,42 +206,40 @@ export default function SchemaForm({
   ]);
 
   useEffect(() => {
-    Object.keys(formResponse).map(
-      (key) => {
-        const errorFieldRemoveValidationConditions:
-          | {
-              dependentField: string;
-              operator: "===" | "!==" | "<" | "<=" | ">" | ">=";
-              dependentFieldValue: any;
-              relation?: "and";
-            }[]
-          | undefined = schema.find(
-          (field) => field.key === key
-        )?.removeValidationConditions;
+    Object.keys(formResponse).map((key) => {
+      const errorFieldRemoveValidationConditions:
+        | {
+            dependentField: string;
+            operator: "===" | "!==" | "<" | "<=" | ">" | ">=";
+            dependentFieldValue: any;
+            relation?: "and";
+          }[]
+        | undefined = schema.find(
+        (field) => field.key === key
+      )?.removeValidationConditions;
 
-        const fieldValidationRemoveApproved = checkRemoveValidationCondition(
-          errorFieldRemoveValidationConditions,
-          formResponse
-        );
+      const fieldValidationRemoveApproved = checkRemoveValidationCondition(
+        errorFieldRemoveValidationConditions,
+        formResponse
+      );
 
-        if (fieldValidationRemoveApproved) {
-          setCanIgnoreErrors((prev) => {
-            return {
-              ...prev,
-              [key]: true,
-            };
-          });
-        } else {
-          setCanIgnoreErrors((prev) => {
-            return {
-              ...prev,
-              [key]: false,
-            };
-          });
-        }
-        return fieldValidationRemoveApproved;
+      if (fieldValidationRemoveApproved) {
+        setCanIgnoreErrors((prev) => {
+          return {
+            ...prev,
+            [key]: true,
+          };
+        });
+      } else {
+        setCanIgnoreErrors((prev) => {
+          return {
+            ...prev,
+            [key]: false,
+          };
+        });
       }
-    );
+      return fieldValidationRemoveApproved;
+    });
   }, [formResponse, schema]);
 
   useEffect(() => {
@@ -320,13 +294,22 @@ export default function SchemaForm({
                                 key={formItem.key}
                                 name={formItem.key as string}
                                 control={form.control}
-                                render={({ field }) =>
-                                  renderField(
-                                    formItem,
-                                    field,
-                                    showValidationErrors
-                                  )
-                                }
+                                render={({ field }) => {
+                                  return (
+                                    <FormItem>
+                                      <FormLabel>{formItem.title}</FormLabel>
+                                      <FormControl>
+                                        {renderField(formItem, field)}
+                                      </FormControl>
+                                      {formItem.description && (
+                                        <FormDescription>
+                                          {formItem.description}
+                                        </FormDescription>
+                                      )}
+                                      {showValidationErrors && <FormMessage />}
+                                    </FormItem>
+                                  );
+                                }}
                               />
                             );
                           })}
@@ -372,9 +355,22 @@ export default function SchemaForm({
                             key={formItem.key}
                             name={formItem.key as string}
                             control={form.control}
-                            render={({ field }) =>
-                              renderField(formItem, field, showValidationErrors)
-                            }
+                            render={({ field }) => {
+                              return (
+                                <FormItem>
+                                  <FormLabel>{formItem.title}</FormLabel>
+                                  <FormControl>
+                                    {renderField(formItem, field)}
+                                  </FormControl>
+                                  {formItem.description && (
+                                    <FormDescription>
+                                      {formItem.description}
+                                    </FormDescription>
+                                  )}
+                                  {showValidationErrors && <FormMessage />}
+                                </FormItem>
+                              );
+                            }}
                           />
                         )
                     )}

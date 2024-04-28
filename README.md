@@ -22,6 +22,8 @@
 - [x] Conditional Field Display: Display the field only if a certain condition is met.
 - [x] Conditional Validation Check Toggle: Toggle the validation check for a field, if defined, based on whether a certain condition is met.
 
+- [ ] FIXME: Checbox validation not working
+
 ### Form Fields
 
 All fields include all functionalities from either the rsuite or any popular package based on the field type.

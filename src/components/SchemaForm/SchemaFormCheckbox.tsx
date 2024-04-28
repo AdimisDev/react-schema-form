@@ -1,5 +1,5 @@
 import { Control } from "react-hook-form";
-import { IFieldSchema } from "./SchemaForm.interface";
+import { IFieldSchema } from "../../interfaces/SchemaForm.interface";
 import { FormControl, FormField, FormItem, FormMessage } from "../ui/form";
 import { Checkbox } from "../ui/checkbox";
 

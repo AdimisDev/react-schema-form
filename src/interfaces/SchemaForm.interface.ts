@@ -6,7 +6,7 @@ import {
   UseFormHandleSubmit,
   UseFormReturn,
 } from "react-hook-form";
-import { ButtonProps } from "../ui/button";
+import { ButtonProps } from "../components/ui/button";
 import { z } from "zod";
 
 export interface IFieldSchema {
@@ -92,7 +92,6 @@ export interface IFieldSchema {
 export interface CustomFieldProps {
   field: ControllerRenderProps<FieldValues, string>;
   formItem: IFieldSchema;
-  showValidationErrors?: boolean;
   loading?: boolean;
 }
 

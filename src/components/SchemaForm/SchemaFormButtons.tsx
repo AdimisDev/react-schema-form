@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { SchemaFormFooterProps } from "./SchemaForm.interface";
+import { SchemaFormFooterProps } from "../../interfaces/SchemaForm.interface";
 
 function SchemaFormButtons({
   submitButton,

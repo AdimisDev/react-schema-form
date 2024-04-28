@@ -1,4 +1,17 @@
-import { ISchemaForm } from "@/components/SchemaForm/SchemaForm.interface";
+import { ISchemaForm } from "@/interfaces/SchemaForm.interface";
+import { z } from "zod";
+
+const formValidations = {
+  email: z
+    .string()
+    .email("Enter a valid email address")
+    .min(1, "Email is required"),
+  password: z
+    .string()
+    .min(8, "Password should be at least 8 characters")
+    .max(20, "Password must not exceed 20 characters"),
+  terms: z.boolean(),
+};
 
 export const loginFormProps: ISchemaForm = {
   formName: "login-form",
@@ -12,17 +25,7 @@ export const loginFormProps: ISchemaForm = {
       placeholder: "Enter your email",
       defaultValue: "abc@gmail.com",
       disabled: false,
-      validations: [
-        {
-          type: "required",
-          message: "Email is required",
-        },
-        {
-          type: "minLength",
-          value: 3,
-          message: "Email must be at least 3 characters long",
-        },
-      ],
+      validations: formValidations.email,
     },
     {
       key: "password",
@@ -32,17 +35,7 @@ export const loginFormProps: ISchemaForm = {
       placeholder: "Enter your password",
       defaultValue: "123456",
       disabled: false,
-      validations: [
-        {
-          type: "required",
-          message: "Password is required",
-        },
-        {
-          type: "minLength",
-          value: 6,
-          message: "Password must be at least 6 characters long",
-        },
-      ],
+      validations: formValidations.password,
     },
   ],
   onSubmit: (values) =>

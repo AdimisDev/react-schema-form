@@ -1,4 +1,4 @@
-import { ISchemaForm } from "@/components/SchemaForm/SchemaForm.interface";
+import { ISchemaForm } from "@/interfaces/SchemaForm.interface";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
 
@@ -75,7 +75,7 @@ export const schemaFormProps: ISchemaForm = {
           dependentFieldValue: "admin@adimis.in",
           operator: "!==",
         },
-      ]
+      ],
     },
     {
       key: "address",
@@ -102,7 +102,12 @@ export const schemaFormProps: ISchemaForm = {
   width: "100%",
   devTools: true,
   onChange: (formResponse, fieldValidations, canIgnoreErrors) =>
-    console.log("Form OnChange: ", formResponse, fieldValidations, canIgnoreErrors),
+    console.log(
+      "Form OnChange: ",
+      formResponse,
+      fieldValidations,
+      canIgnoreErrors
+    ),
   onSubmit: (values) =>
     console.log("On Submit Example Form Response: ", JSON.stringify(values)),
   header: <h2 className="text-3xl font-bold text-left">Example Form</h2>,
