@@ -19,11 +19,11 @@ import SchemaFormFooter from "./SchemaFormFooter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
-// import { checkAndDisableValidation } from "@/utils/updateFieldVisibility";
 import {
   checkRemoveValidationCondition,
   updateFieldVisibility,
 } from "@/lib/utils/updateFieldVisibility";
+import "../../index.css";
 
 export default function SchemaForm({
   schema,
