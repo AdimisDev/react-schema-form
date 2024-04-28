@@ -31,7 +31,6 @@ Effortlessly create dynamic forms in React applications with @adimis/react-schem
 ```bash
 npm install @adimis/react-schema-form
 ```
-````
 
 ### Step 2: Import required styles
 
