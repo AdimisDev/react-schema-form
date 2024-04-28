@@ -3,7 +3,7 @@
 ## Tech Stack
 
 - React Hook Form
-- Chakra UI
+- Shadcn UI
 - Zod
 - React
 - TypeScript
@@ -19,9 +19,8 @@
 - [x] Multi Step Form: Pass the `steps: string[]` prop in ISchemaForm split the form fields into groups and present the form as a multi step form, with each step having it's own group.
 - [x] Panel: Form inside a Card.
 - [x] Custom Field Zod Validation: Dynamically generate validation schema for field rendered using `render` prop of `IFieldSchema` based on provided `validations` of `IFieldSchema` for zodResolver to be used as a resolver for useForm of React Hook Form.
-- [ ] Conditional Field Display: Display the field only if a certain condition is met.
-- [ ] Conditional Validation Check Toggle: Toggle the validation check for a field, if defined, based on whether a certain condition is met.
-- [ ] FIXME: Checkboxes Validation Not Working.
+- [x] Conditional Field Display: Display the field only if a certain condition is met.
+- [x] Conditional Validation Check Toggle: Toggle the validation check for a field, if defined, based on whether a certain condition is met.
 
 ### Form Fields
 
