@@ -3,20 +3,15 @@ import { Button } from "@/components/ui/button";
 
 export const schemaFormProps: ISchemaForm = {
   formName: "example-form",
+  panel: true,
   schema: [
     {
       key: "password",
-      title: "password",
-      helpText: "Enter password",
+      title: "Password",
+      helpText: "Enter your password",
       type: "password",
       placeholder: "Enter your password",
       defaultValue: "123",
-      options: [
-        {
-          label: "Option 1",
-          value: "option_1",
-        },
-      ],
       disabled: false,
       validations: [
         {
@@ -32,141 +27,102 @@ export const schemaFormProps: ISchemaForm = {
     },
     {
       key: "username",
-      title: "username",
-      helpText: "Enter username",
+      title: "Username",
+      helpText: "Enter your username",
       type: "text",
-      placeholder: "Enter your username please",
-      defaultValue: "456789",
-      options: [
-        {
-          label: "Option 1",
-          value: "option_1",
-        },
-      ],
+      placeholder: "Enter your username",
+      defaultValue: "",
       disabled: false,
       validations: [
         {
           type: "required",
-          message: "username required hai bhai",
+          message: "Username is required",
         },
         {
           type: "minLength",
           value: 6,
-          message: "bhot jyada hi chota h, min 6 likh le bhai",
+          message: "Minimum length is 6 characters",
         },
         {
           type: "maxLength",
           value: 10,
-          message: "max length 10 hai bhai, thik krle",
+          message: "Maximum length is 10 characters",
         },
       ],
     },
     {
       key: "email",
-      title: "email",
-      helpText: "Enter email",
+      title: "Email",
+      helpText: "Enter your email",
       type: "email",
-      placeholder: "Enter your email please",
+      placeholder: "Enter your email",
       defaultValue: "",
-      options: [
-        {
-          label: "Option 1",
-          value: "option_1",
-        },
-      ],
       disabled: false,
       validations: [
         {
           type: "required",
-          message: "email is required, please enter a valid email",
-        },
-      ],
-    },
-    {
-      key: "string",
-      title: "textarea",
-      helpText: "Enter password",
-      type: "textarea",
-      placeholder: "Enter your password",
-      defaultValue: "",
-      options: [
-        {
-          label: "Option 1",
-          value: "option_1",
-        },
-      ],
-      disabled: false,
-      validations: [
-        {
-          type: "required",
-          message: "This field is required",
+          message: "Email is required, please enter a valid email",
         },
         {
           type: "minLength",
-          value: 6,
-          message: "Minimum length is 6",
+          value: 3,
+          message: "Email must be at least 3 characters long",
         },
       ],
     },
     {
-      key: "string2",
-      title: "input date",
-      helpText: "Enter password",
-      type: "textarea",
-      placeholder: "Enter your password",
+      key: "address",
+      title: "Address",
+      helpText: "Enter your address",
+      type: "text",
+      placeholder: "1234 Main St",
       defaultValue: "",
-      options: [
-        {
-          label: "Option 1",
-          value: "option_1",
-        },
-      ],
       disabled: false,
       validations: [
         {
           type: "required",
-          message: "This field is required",
-        },
-        {
-          type: "minLength",
-          value: 6,
-          message: "Minimum length is 6",
+          message: "Address is required",
         },
       ],
     },
     {
-      key: "select_field",
-      title: "Select Field",
-      helpText: "Select an option",
-      type: "select",
-      placeholder: "Select an option",
-      defaultValue: "something",
-      options: [
-        {
-          label: "Something",
-          value: "something",
-        },
-        {
-          label: "Something else",
-          value: "something_else",
-        },
-      ],
+      key: "phone",
+      title: "Phone Number",
+      helpText: "Enter your phone number",
+      type: "tel",
+      placeholder: "Enter your phone number",
+      defaultValue: "",
       disabled: false,
       validations: [
         {
           type: "required",
-          message: "This field is required",
+          message: "Phone number is required",
         },
       ],
     },
   ],
+  // multiStepFormSteps: {
+  //   stage_1: {
+  //     stageLabel: "Stage 1",
+  //     fields: ["username", "password"],
+  //   },
+  //   stage_2: {
+  //     stageLabel: "Stage 2",
+  //     fields: ["email"],
+  //   },
+  //   stage_3: {
+  //     stageLabel: "Stage 3",
+  //     fields: ["address", "phone"],
+  //   },
+  // },
   persistFormResponse: "sessionStorage",
   width: "100%",
   devTools: true,
+  onChange: (formResponse, fieldValidations) =>
+    console.log("Form OnChange: ", formResponse, fieldValidations),
   onSubmit: (values) =>
     console.log("Example Form Response: ", JSON.stringify(values)),
-  onValidationError: (errors) =>
-    console.error("Form Validation Error: ", JSON.stringify(errors, null, 4)),
+  header: <h2 className="text-3xl font-bold text-left">Example Form</h2>,
   renderButtons: (formData, handleSubmit) => {
     const buttons: React.ReactNode[] = [];
 
@@ -221,9 +177,7 @@ export const schemaFormProps: ISchemaForm = {
     return buttons;
   },
   checkboxes: {
-    aboveButtons: false,
-    className: "flex justify-between items-center mt-5",
-    fluid: true,
+    className: "flex justify-between items-center gap-4 mt-5",
     items: [
       {
         key: "terms",
@@ -242,4 +196,20 @@ export const schemaFormProps: ISchemaForm = {
       },
     ],
   },
+  links: (
+    <div className="w-full flex justify-between items-center mt-5">
+      <a
+        href="/"
+        className="underline underline-offset-2 cursor-pointer hover:text-black/70"
+      >
+        Privacy Policy
+      </a>
+      <a
+        href="/"
+        className="underline underline-offset-2 cursor-pointer hover:text-black/70"
+      >
+        Terms and Condition
+      </a>
+    </div>
+  ),
 };

@@ -1,129 +1,22 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Control, useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { Form, FormField } from "@/components/ui/form";
-import { cn } from "@/lib/utils";
-import React, { useEffect, useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { generateDynamicSchema } from "./generateDynamicSchema";
 import renderField from "./renderField";
-import {
-  IFieldSchema,
-  ISchemaForm,
-  SchemaFormFooterProps,
-} from "./SchemaForm.interface";
-import { Checkbox } from "@/components/ui/checkbox";
-import { FormControl, FormItem, FormMessage } from "@/components/ui/form";
-
-function SchemaFormCheckbox({
-  formItem,
-  control,
-}: {
-  formItem: IFieldSchema;
-  control: Control<Record<string, any>, any>;
-}) {
-  return (
-    <FormField
-      key={`${formItem.key}_form_field_${formItem.title}`}
-      name={formItem.key as string}
-      control={control}
-      render={({ field }) => (
-        <FormItem className="mt-2">
-          <FormControl>
-            <div className="items-top flex space-x-2">
-              <Checkbox
-                id={formItem.key + "checkbox"}
-                {...field}
-                defaultChecked={formItem.defaultValue === false ? false : true}
-                onChange={() => {
-                  field.onChange(!field.value);
-                }}
-              />
-              <div className="grid gap-1.5 leading-none">
-                <label
-                  htmlFor={formItem.key + "checkbox"}
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  {formItem.title}
-                </label>
-              </div>
-            </div>
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  );
-}
-
-function SchemaFormButtons({
-  submitButton,
-  submitButtonLoading,
-  formResponse,
-  renderButtons,
-  form,
-  onSubmit,
-  setSubmitButtonLoading,
-}: SchemaFormFooterProps) {
-  const buttons: React.ReactNode[] = renderButtons
-    ? renderButtons(formResponse, form.handleSubmit)
-    : [];
-
-  if (!submitButton?.hideSubmit) {
-    buttons.unshift(
-      <Button
-        key="submit"
-        className={cn("w-full col-span-4", submitButton?.submitButtonClassName)}
-        type="submit"
-        variant={submitButton?.submitButtonVarient || "default"}
-        loading={submitButtonLoading}
-        onClick={() => {
-          setSubmitButtonLoading(true);
-          form
-            .handleSubmit(onSubmit)()
-            .then(() => setSubmitButtonLoading(false));
-        }}
-      >
-        {submitButton?.submitButtonName || "Submit"}
-      </Button>
-    );
-  }
-
-  return (
-    <>
-      {buttons.map((button, index) => {
-        if (index === 0) {
-          return (
-            <div key={index} className="col-span-4">
-              {button}
-            </div>
-          );
-        } else if (index === buttons.length - 1) {
-          const lastColSpan =
-            buttons.length % 2 === 0 ? "col-span-4" : "col-span-2";
-          return (
-            <div key={index} className={lastColSpan}>
-              {button}
-            </div>
-          );
-        } else {
-          return (
-            <div key={index} className="col-span-2">
-              {button}
-            </div>
-          );
-        }
-      })}
-    </>
-  );
-}
+import { ISchemaForm } from "./SchemaForm.interface";
+import { Card, CardContent, CardHeader } from "../ui/card";
+import SchemaFormFooter from "./SchemaFormFooter";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { z } from "zod";
 
 export default function SchemaForm({
   schema,
   onSubmit,
   onChange,
   devTools,
-  centered,
   className,
   submitButton,
   persistFormResponse,
@@ -134,147 +27,212 @@ export default function SchemaForm({
   links,
   header,
   renderFooter,
+  multiStepFormSteps,
   showValidationErrors = true,
-  onValidationError,
-  // fluid,
-  // panel,
-  // multiStepFormSteps,
+  panel = true,
 }: ISchemaForm) {
-  const [submitButtonLoading, setSubmitButtonLoading] = useState(false);
-
-  const formKey = formName + "_schema_form";
-  const initialFormValues: Record<string, any> = schema
-    .concat(checkboxes?.items || [])
-    .reduce(
-      (acc, item) => ({
-        ...acc,
-        [item.key as string]: item.defaultValue,
-      }),
-      {}
-    );
-
-  const [formResponse, setFormResponse] = useState(initialFormValues);
-  const formLocalStorageResponse = localStorage.getItem(formKey);
-  const formSessionStorageResponse = sessionStorage.getItem(formKey);
-
   const formRef = useRef(null);
+  const [submitButtonLoading, setSubmitButtonLoading] = useState(false);
+  const formKey = formName + "_schema_form";
+  const getInitialValues = () => {
+    const savedValues =
+      persistFormResponse === "localStorage"
+        ? localStorage.getItem(formKey)
+        : sessionStorage.getItem(formKey);
+    const initialData = schema
+      .concat(checkboxes?.items || [])
+      .reduce((acc, item) => ({ ...acc, [item.key]: item.defaultValue }), {});
+    return savedValues
+      ? { ...initialData, ...JSON.parse(savedValues) }
+      : initialData;
+  };
 
-  let defaultValues: Record<string, any> = {};
+  const initialFormValues = getInitialValues();
 
-  if (persistFormResponse === "localStorage" && formLocalStorageResponse) {
-    defaultValues = JSON.parse(formLocalStorageResponse) ?? initialFormValues;
-  } else if (
-    persistFormResponse === "sessionStorage" &&
-    formSessionStorageResponse
-  ) {
-    defaultValues = JSON.parse(formSessionStorageResponse) ?? initialFormValues;
-  } else {
-    defaultValues = formResponse;
-  }
+  const [currentStep, setCurrentStep] = useState(
+    Object.keys(multiStepFormSteps ? multiStepFormSteps : {})[0]
+  );
 
-  const form = useForm({
-    resolver: zodResolver(generateDynamicSchema(schema)),
+  const zodSchema = generateDynamicSchema(schema, checkboxes);
+  const form = useForm<z.infer<typeof zodSchema>>({
+    resolver: zodResolver(zodSchema),
     mode: "onChange",
     reValidateMode: "onSubmit",
-    defaultValues: defaultValues,
+    defaultValues: initialFormValues,
   });
 
-  const watchFields = form.watch();
-
-  useEffect(() => {
-    if (persistFormResponse === "localStorage") {
-      localStorage.setItem(formKey, JSON.stringify(watchFields));
-      setFormResponse(watchFields);
-    } else if (persistFormResponse === "sessionStorage") {
-      sessionStorage.setItem(formKey, JSON.stringify(watchFields));
-      setFormResponse(watchFields);
-    } else {
-      setFormResponse(watchFields);
-    }
-    return () => {
-      localStorage.removeItem(JSON.stringify(schema) + "_schema_form");
-      sessionStorage.removeItem(JSON.stringify(schema) + "_schema_form");
-    };
-  }, [watchFields, schema, persistFormResponse, formKey]);
-
-  useEffect(() => {
-    if (onChange) {
-      onChange(watchFields, form.formState.errors);
-    }
-  }, [watchFields, form.formState.errors, onChange]);
-
-  useEffect(() => {
-    if (onValidationError) {
-      const errors = form.formState.errors;
-      console.log("Errors: ", errors);
-      if (Object.keys(errors).length > 0) {
-        onValidationError(errors);
+  function handleSubmit(values: z.infer<typeof zodSchema>) {
+    if (onSubmit) {
+      setSubmitButtonLoading(true);
+      const result = onSubmit(values);
+      if (result instanceof Promise) {
+        result.then(() => setSubmitButtonLoading(false));
+      } else {
+        setSubmitButtonLoading(false);
       }
     }
-  }, [form.formState.errors, onValidationError]);
+  }
 
-  return schema ? (
-    <div
-      className={`w-full h-full ${
-        centered && "flex justify-center items-center"
-      }`}
-      style={{
-        maxWidth: width,
-        width: "100%",
-      }}
-    >
-      {devTools && <DevTool control={form.control} />}
-      <div>{header}</div>
-      <Form {...form}>
-        <div ref={formRef} className={cn("gap-3 flex flex-col", className)}>
-          {schema.map((formItem) => (
-            <FormField
-              key={formItem.key}
-              name={formItem.key as string}
-              control={form.control}
-              render={({ field }) =>
-                renderField(formItem, field, showValidationErrors)
-              }
-            />
-          ))}
-          {renderFooter ? (
-            <React.Fragment>{renderFooter(formResponse)}</React.Fragment>
-          ) : (
-            <div>
-              <div>{links}</div>
+  const Container = panel ? Card : "div";
+  const ContainerContent = panel ? CardContent : "div";
+  const ContainerHeader = panel ? CardHeader : "div";
 
-              <div className="grid grid-rows-2 gap-2 mt-5">
-                <SchemaFormButtons
-                  formResponse={formResponse}
-                  key={formKey}
-                  renderButtons={renderButtons}
-                  submitButton={submitButton}
-                  submitButtonLoading={submitButtonLoading}
-                  form={form}
-                  onSubmit={onSubmit}
-                  setSubmitButtonLoading={setSubmitButtonLoading}
-                />
-              </div>
-              <div
-                className={`${checkboxes?.className ? checkboxes.className : "flex justify-between items-center mt-5"}`}
-              >
-                {checkboxes?.items &&
-                  checkboxes.items.length > 0 &&
-                  checkboxes.items.map((formItem) => (
-                    <div key={formItem.key}>
-                      <SchemaFormCheckbox
-                        control={form.control}
-                        formItem={formItem}
-                      />
-                    </div>
-                  ))}
-              </div>
-            </div>
+  const stepKeys = Object.keys(multiStepFormSteps ? multiStepFormSteps : {});
+
+  const isLastStep = currentStep === stepKeys[stepKeys.length - 1];
+
+  const handleNext = () => {
+    const currentIndex = stepKeys.indexOf(currentStep);
+    const nextIndex = currentIndex + 1;
+    if (nextIndex < stepKeys.length) {
+      setCurrentStep(stepKeys[nextIndex]);
+    }
+  };
+
+  const handlePrev = () => {
+    const currentIndex = stepKeys.indexOf(currentStep);
+    const prevIndex = currentIndex - 1;
+    if (prevIndex >= 0) {
+      setCurrentStep(stepKeys[prevIndex]);
+    }
+  };
+
+  const watchFields = form.watch();
+  const formErrors = form.formState.errors;
+  useEffect(() => {
+    if (onChange) {
+      onChange(watchFields, formErrors);
+    }
+    if (persistFormResponse === "localStorage") {
+      localStorage.setItem(formKey, JSON.stringify(watchFields));
+    } else if (persistFormResponse === "sessionStorage") {
+      sessionStorage.setItem(formKey, JSON.stringify(watchFields));
+    }
+  }, [formErrors, watchFields, onChange, persistFormResponse, formKey]);
+
+  return (
+    schema && (
+      <Container className={`w-full h-full max-w-[${width}]`}>
+        <ContainerHeader>
+          {devTools && <DevTool control={form.control} />}
+          {header && (
+            <div className={`${panel ? undefined : "mb-6"}`}>{header}</div>
           )}
-        </div>
-      </Form>
-    </div>
-  ) : (
-    <>Schema not found!</>
+        </ContainerHeader>
+        <ContainerContent>
+          <Form {...form}>
+            <form
+              className={`gap-4 ${className}`}
+              ref={formRef}
+              onSubmit={form.handleSubmit(handleSubmit)}
+            >
+              {multiStepFormSteps ? (
+                <>
+                  <Tabs
+                    defaultValue={Object.keys(multiStepFormSteps)[0]}
+                    value={currentStep}
+                    onValueChange={setCurrentStep}
+                  >
+                    <TabsList>
+                      {Object.entries(multiStepFormSteps).map(
+                        ([key, value]) => (
+                          <TabsTrigger key={key} value={key}>
+                            {value.stageLabel}
+                          </TabsTrigger>
+                        )
+                      )}
+                    </TabsList>
+                    {Object.entries(multiStepFormSteps).map(([key, value]) => (
+                      <TabsContent key={key} value={key}>
+                        <div className="grid grid-row-* grid-col-*">
+                          {value.fields?.map((fieldName) => {
+                            if (!fieldName) return null;
+                            const formItem = schema.find(
+                              (item) => item.key === fieldName
+                            );
+                            if (!formItem) return null;
+
+                            return (
+                              <FormField
+                                key={fieldName}
+                                name={fieldName}
+                                control={form.control}
+                                render={({ field }) =>
+                                  renderField(
+                                    formItem,
+                                    field,
+                                    showValidationErrors
+                                  )
+                                }
+                              />
+                            );
+                          })}
+                        </div>
+                        {isLastStep && (
+                          <SchemaFormFooter
+                            formResponse={form.watch()}
+                            key={formKey}
+                            renderButtons={renderButtons}
+                            submitButton={submitButton}
+                            submitButtonLoading={submitButtonLoading}
+                            form={form}
+                            formKey={formKey}
+                            links={links}
+                            renderFooter={renderFooter}
+                            checkboxes={checkboxes}
+                          />
+                        )}
+                      </TabsContent>
+                    ))}
+                  </Tabs>
+                  <div className="flex justify-between mt-4">
+                    {!isLastStep && (
+                      <>
+                        <Button
+                          disabled={
+                            currentStep === Object.keys(multiStepFormSteps)[0]
+                          }
+                          onClick={handlePrev}
+                        >
+                          Prev
+                        </Button>
+                        <Button onClick={handleNext}>Next</Button>
+                      </>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="grid grid-row-* grid-col-*">
+                    {schema.map((formItem) => (
+                      <FormField
+                        key={formItem.key}
+                        name={formItem.key as string}
+                        control={form.control}
+                        render={({ field }) =>
+                          renderField(formItem, field, showValidationErrors)
+                        }
+                      />
+                    ))}
+                  </div>
+                  <SchemaFormFooter
+                    formResponse={form.watch()}
+                    key={formKey}
+                    renderButtons={renderButtons}
+                    submitButton={submitButton}
+                    submitButtonLoading={submitButtonLoading}
+                    form={form}
+                    formKey={formKey}
+                    links={links}
+                    renderFooter={renderFooter}
+                    checkboxes={checkboxes}
+                  />
+                </>
+              )}
+            </form>
+          </Form>
+        </ContainerContent>
+      </Container>
+    )
   );
 }

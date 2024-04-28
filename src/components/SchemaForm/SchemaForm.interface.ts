@@ -9,24 +9,17 @@ import {
 import { ButtonProps } from "../ui/button";
 
 export interface IFieldSchema {
-  key?: string;
+  key: string;
   title?: string;
   description?: string;
   helpText?: string;
   type?:
-    | "password"
-    | "text"
-    | "email"
+    | React.HTMLInputTypeAttribute
     | "textarea"
     | "select"
     | "multi-select"
     | "radio group"
-    | "file"
-    | "boolean"
-    | "range"
-    | "date"
-    | "boolean"
-    | "time";
+    | "boolean";
   placeholder?: string;
   defaultValue?: string | number | boolean | Array<any>;
   options?: Array<{
@@ -39,7 +32,7 @@ export interface IFieldSchema {
     message?: string;
     value?: number | string;
   }>;
-  seperator?: boolean;
+  seperator?: boolean; // TODO
   // render prop usage example
   /*
   Example-1:
@@ -93,52 +86,61 @@ export interface CustomFieldProps {
   loading?: boolean;
 }
 
+export interface SchemaFormFooterProps {
+  form: UseFormReturn<Record<string, any>, any, undefined>;
+  formResponse: Record<string, any>;
+  formKey?: string | number;
+  submitButtonLoading: boolean;
+  links?: ISchemaForm["links"];
+  renderFooter?: ISchemaForm["renderFooter"];
+  renderButtons?: ISchemaForm["renderButtons"];
+  submitButton: ISchemaForm["submitButton"];
+  checkboxes?: ISchemaForm["checkboxes"];
+}
+
 export interface ISchemaForm {
+  // Schema Form Settings
   formName: string;
   schema: IFieldSchema[];
-  width?: string | number;
-  multiStepFormSteps?: IFieldSchema["key"][];
   persistFormResponse?: "localStorage" | "sessionStorage" | undefined;
+  devTools?: boolean;
+  showValidationErrors?: boolean;
+
+  // Schema Form Callbacks
+  onSubmit: (values: Record<string, any>) => Promise<void> | void;
+  onChange?: (
+    formResponse: Record<string, any>,
+    fieldValidations: FieldErrors<Record<string, any>>
+  ) => void;
+
+  // Props for schema form styling and layouting
+  panel?: boolean;
+  width?: string | number;
+  className?: string;
+  multiStepFormSteps?: Record<
+    string,
+    {
+      stageLabel?: string;
+      fields?: IFieldSchema["key"][];
+    }
+  >; // TODO:
+
+  // Props for schema form header and footer
+  header?: React.ReactNode;
+  links?: React.ReactNode;
   submitButton?: {
     submitButtonClassName?: string;
     submitButtonVarient?: ButtonProps["variant"];
     submitButtonName?: string | ReactNode;
     hideSubmit?: boolean;
   };
-  links?: React.ReactNode;
-  checkboxes?: {
-    aboveButtons?: boolean;
-    aboveLinks?: boolean;
-    className?: string;
-    fluid?: boolean;
-    items: IFieldSchema[];
-  };
-  onSubmit: (values: Record<string, any>) => Promise<void> | void;
-  onChange?: (
-    formResponse: Record<string, any>,
-    fieldValidations: FieldErrors<{ [x: string]: any }>
-  ) => void;
-  onValidationError?: (errors: any) => void;
   renderButtons?: (
     formData: Record<string, any>,
     handleSubmit: UseFormHandleSubmit<Record<string, any>, undefined>
   ) => React.ReactNode[];
-  fluid?: boolean;
-  panel?: boolean;
-  centered?: boolean;
-  devTools?: boolean;
-  showValidationErrors?: boolean;
-  className?: string;
-  header?: React.ReactNode;
+  checkboxes?: {
+    className?: string;
+    items: IFieldSchema[];
+  };
   renderFooter?: (formResponse: Record<string, any>) => React.ReactNode;
-}
-
-export interface SchemaFormFooterProps {
-  formResponse: Record<string, any>;
-  submitButtonLoading?: boolean;
-  submitButton?: ISchemaForm["submitButton"];
-  renderButtons?: ISchemaForm["renderButtons"];
-  setSubmitButtonLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  form: UseFormReturn<Record<string, any>, any, undefined>;
-  onSubmit: (values: Record<string, any>) => void | Promise<void>;
 }
