@@ -13,7 +13,8 @@
     }
   },
   "files": [
-    "/dist"
+    "/dist",
+    "Readme.md"
   ],
   "publishConfig": {
     "access": "public"
