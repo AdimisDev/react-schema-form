@@ -1,4 +1,4 @@
-import { ISchemaForm } from "@/interfaces/SchemaForm.interface";
+import { ISchemaFormProps } from "@/interfaces/SchemaForm.interface";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
 
@@ -27,7 +27,7 @@ const formValidations = {
   terms: z.boolean(),
 };
 
-export const schemaFormProps: ISchemaForm = {
+export const schemaFormProps: ISchemaFormProps = {
   formName: "example-form",
   panel: true,
   schema: [

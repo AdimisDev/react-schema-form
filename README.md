@@ -13,10 +13,10 @@
 
 ## Technical Features
 
-- [x] State Persist: By default persist the form response in localstorage, and can switch between sessionStorage or nothing using `persistFormResponse: 'localStorage' | 'sessionStorage' | null` of `ISchemaForm`.
+- [x] State Persist: By default persist the form response in localstorage, and can switch between sessionStorage or nothing using `persistFormResponse: 'localStorage' | 'sessionStorage' | null` of `ISchemaFormProps`.
 - [x] Predefined Field Zod Validation: Dynamically generate validation schema for all the predefined field based on provided `validations` of `IFieldSchema` for zodResolver to be used as a resolver for useForm of React Hook Form.
 - [x] Render Custom Fields: Render custom form fields using a render prop.
-- [x] Multi Step Form: Pass the `steps: string[]` prop in ISchemaForm split the form fields into groups and present the form as a multi step form, with each step having it's own group.
+- [x] Multi Step Form: Pass the `steps: string[]` prop in ISchemaFormProps split the form fields into groups and present the form as a multi step form, with each step having it's own group.
 - [x] Panel: Form inside a Card.
 - [x] Custom Field Zod Validation: Dynamically generate validation schema for field rendered using `render` prop of `IFieldSchema` based on provided `validations` of `IFieldSchema` for zodResolver to be used as a resolver for useForm of React Hook Form.
 - [x] Conditional Field Display: Display the field only if a certain condition is met.
@@ -142,7 +142,7 @@ export interface CustomFieldProps {
   loading?: boolean;
 }
 
-export interface ISchemaForm {
+export interface ISchemaFormProps {
   schema: IFieldSchema[];
   settings?: {
     formName?: string;

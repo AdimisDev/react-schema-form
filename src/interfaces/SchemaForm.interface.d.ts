@@ -100,14 +100,14 @@ export interface SchemaFormFooterProps {
   formResponse: Record<string, any>;
   formKey?: string | number;
   submitButtonLoading: boolean;
-  links?: ISchemaForm["links"];
-  renderFooter?: ISchemaForm["renderFooter"];
-  renderButtons?: ISchemaForm["renderButtons"];
-  submitButton: ISchemaForm["submitButton"];
-  checkboxes?: ISchemaForm["checkboxes"];
+  links?: ISchemaFormProps["links"];
+  renderFooter?: ISchemaFormProps["renderFooter"];
+  renderButtons?: ISchemaFormProps["renderButtons"];
+  submitButton: ISchemaFormProps["submitButton"];
+  checkboxes?: ISchemaFormProps["checkboxes"];
 }
 
-export interface ISchemaForm {
+export interface ISchemaFormProps {
   // Schema Form Settings
   formName: string;
   schema: IFieldSchema[];
@@ -116,7 +116,7 @@ export interface ISchemaForm {
   showValidationErrors?: boolean;
 
   // Schema Form Callbacks
-  onSubmit: (values: Record<string, any>) => Promise<void> | void;
+  onSubmit?: (values: Record<string, any>) => Promise<void> | void;
   onChange?: (
     formResponse: Record<string, any>,
     fieldValidations: FieldErrors<Record<string, any>>,

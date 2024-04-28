@@ -1,4 +1,4 @@
-import { ISchemaForm } from "@/interfaces/SchemaForm.interface";
+import { ISchemaFormProps } from "@/interfaces/SchemaForm.interface";
 import { z } from "zod";
 
 const formValidations = {
@@ -13,7 +13,7 @@ const formValidations = {
   terms: z.boolean(),
 };
 
-export const loginFormProps: ISchemaForm = {
+export const loginFormProps: ISchemaFormProps = {
   formName: "login-form",
   header: <h2 className="text-3xl font-bold text-left">Login Form</h2>,
   schema: [
