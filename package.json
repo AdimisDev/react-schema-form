@@ -1,8 +1,8 @@
 {
-  "name": "react-schema-form",
+  "name": "@adimis/react-schema-form",
   "author": "adimis",
   "private": false,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
@@ -19,6 +19,19 @@
   "publishConfig": {
     "access": "public"
   },
+  "keywords": [
+    "react",
+    "react-schema-form",
+    "zod-validation"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AdimisDev/react-schema-form.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AdimisDev/react-schema-form/issues"
+  },
+  "homepage": "https://github.com/AdimisDev/react-schema-form/blob/main/README.md",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
