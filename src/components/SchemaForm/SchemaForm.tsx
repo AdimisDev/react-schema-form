@@ -11,6 +11,7 @@ import SchemaFormFooter from "./SchemaFormFooter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
+// import { checkAndDisableValidation } from "@/utils/updateFieldVisibility";
 import { updateFieldVisibility } from "@/utils/updateFieldVisibility";
 
 export default function SchemaForm({
@@ -34,6 +35,9 @@ export default function SchemaForm({
 }: ISchemaForm) {
   const formRef = useRef(null);
   const [submitButtonLoading, setSubmitButtonLoading] = useState(false);
+  const [canIgnoreErrors, setCanIgnoreErrors] = useState<
+    Record<string, boolean>
+  >({});
   const formKey = formName + "_schema_form";
   const getInitialValues = () => {
     const savedValues =
@@ -69,21 +73,106 @@ export default function SchemaForm({
     new Set(schema.map((item) => item.key))
   );
 
-  // TODO:
-
-  /* Every field has displayConditions prop, based on that conditionally display the field.
-  displayConditions?: {
-    dependsOnField: string;
-    operator: "===" | "!==" | "<" | "<=" | ">" | ">=";
-    dependentFieldValue: string;
-    relation?: "and";
-  }[];
-  */
-
-  function handleSubmit(values: z.infer<typeof zodSchema>) {
+  function handleSubmit(values: Record<string, any>) {
     if (onSubmit) {
       setSubmitButtonLoading(true);
       const result = onSubmit(values);
+      if (result instanceof Promise) {
+        result.then(() => setSubmitButtonLoading(false));
+      } else {
+        setSubmitButtonLoading(false);
+      }
+    }
+  }
+
+  function checkRemoveValidationCondition(
+    data?: {
+      dependentField: string;
+      operator: "===" | "!==" | "<" | "<=" | ">" | ">=";
+      dependentFieldValue: any;
+      relation?: "and" | undefined;
+    }[],
+    formResponse?: Record<string, any>
+  ): boolean {
+    if (!data || !formResponse) {
+      return false;
+    }
+
+    const canRemoveError = data.every((condition) => {
+      const { dependentField, operator, dependentFieldValue } = condition;
+      const actualValue = formResponse[dependentField];
+
+      switch (operator) {
+        case "===":
+          return actualValue === dependentFieldValue;
+        case "!==":
+          return actualValue !== dependentFieldValue;
+        case "<":
+          return actualValue < dependentFieldValue;
+        case "<=":
+          return actualValue <= dependentFieldValue;
+        case ">":
+          return actualValue > dependentFieldValue;
+        case ">=":
+          return actualValue >= dependentFieldValue;
+        default:
+          return false;
+      }
+    });
+
+    return canRemoveError;
+  }
+
+  function handleInvalidSubmit(errors: Record<string, any>) {
+    if (onSubmit) {
+      const formResponse = form.watch();
+      console.error("Invalid Submit: ", errors);
+
+      const allRemoveValidationChecks: boolean[] = Object.keys(errors).map(
+        (key) => {
+          const errorFieldRemoveValidationConditions:
+            | {
+                dependentField: string;
+                operator: "===" | "!==" | "<" | "<=" | ">" | ">=";
+                dependentFieldValue: any;
+                relation?: "and";
+              }[]
+            | undefined = schema.find(
+            (field) => field.key === key
+          )?.removeValidationConditions;
+
+          const fieldValidationRemoveApproved = checkRemoveValidationCondition(
+            errorFieldRemoveValidationConditions,
+            formResponse
+          );
+
+          if (fieldValidationRemoveApproved) {
+            setCanIgnoreErrors((prev) => {
+              return {
+                ...prev,
+                [key]: true,
+              };
+            });
+          } else {
+            setCanIgnoreErrors((prev) => {
+              return {
+                ...prev,
+                [key]: false,
+              };
+            });
+          }
+          return fieldValidationRemoveApproved;
+        }
+      );
+      console.log("allRemoveValidationChecks: ", allRemoveValidationChecks);
+
+      const isEveryCheckValid = allRemoveValidationChecks.every(
+        (valid) => valid
+      );
+      console.log("isEveryCheckValid: ", isEveryCheckValid, formResponse);
+
+      setSubmitButtonLoading(true);
+      const result = onSubmit(isEveryCheckValid ? formResponse : errors);
       if (result instanceof Promise) {
         result.then(() => setSubmitButtonLoading(false));
       } else {
@@ -120,22 +209,68 @@ export default function SchemaForm({
   const formErrors = form.formState.errors;
   useEffect(() => {
     if (onChange) {
-      onChange(watchFields, formErrors);
+      onChange(watchFields, formErrors, canIgnoreErrors);
     }
     if (persistFormResponse === "localStorage") {
       localStorage.setItem(formKey, JSON.stringify(watchFields));
     } else if (persistFormResponse === "sessionStorage") {
       sessionStorage.setItem(formKey, JSON.stringify(watchFields));
     }
-    if(JSON.stringify(watchFields) !== JSON.stringify(formResponse)){
+    if (JSON.stringify(watchFields) !== JSON.stringify(formResponse)) {
       setFormResponse(watchFields);
     }
-  }, [formErrors, watchFields, onChange, persistFormResponse, formKey, formResponse]);
+  }, [
+    formErrors,
+    watchFields,
+    onChange,
+    persistFormResponse,
+    formKey,
+    formResponse,
+    canIgnoreErrors,
+  ]);
+
+  useEffect(() => {
+    Object.keys(formResponse).map(
+      (key) => {
+        const errorFieldRemoveValidationConditions:
+          | {
+              dependentField: string;
+              operator: "===" | "!==" | "<" | "<=" | ">" | ">=";
+              dependentFieldValue: any;
+              relation?: "and";
+            }[]
+          | undefined = schema.find(
+          (field) => field.key === key
+        )?.removeValidationConditions;
+
+        const fieldValidationRemoveApproved = checkRemoveValidationCondition(
+          errorFieldRemoveValidationConditions,
+          formResponse
+        );
+
+        if (fieldValidationRemoveApproved) {
+          setCanIgnoreErrors((prev) => {
+            return {
+              ...prev,
+              [key]: true,
+            };
+          });
+        } else {
+          setCanIgnoreErrors((prev) => {
+            return {
+              ...prev,
+              [key]: false,
+            };
+          });
+        }
+        return fieldValidationRemoveApproved;
+      }
+    );
+  }, [formResponse, schema]);
 
   useEffect(() => {
     updateFieldVisibility(schema, formResponse, setVisibleFields);
-  }, [schema, formResponse])
-  
+  }, [schema, formResponse]);
 
   return (
     schema && (
@@ -151,7 +286,7 @@ export default function SchemaForm({
             <form
               className={`gap-4 ${className}`}
               ref={formRef}
-              onSubmit={form.handleSubmit(handleSubmit)}
+              onSubmit={form.handleSubmit(handleSubmit, handleInvalidSubmit)}
             >
               {multiStepFormSteps ? (
                 <>

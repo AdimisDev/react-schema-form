@@ -81,6 +81,12 @@ export interface IFieldSchema {
     dependentFieldValue: string;
     relation?: "and";
   }[];
+  removeValidationConditions?: {
+    dependentField: string;
+    operator: "===" | "!==" | "<" | "<=" | ">" | ">=";
+    dependentFieldValue: string;
+    relation?: "and";
+  }[];
 }
 
 export interface CustomFieldProps {
@@ -114,7 +120,8 @@ export interface ISchemaForm {
   onSubmit: (values: Record<string, any>) => Promise<void> | void;
   onChange?: (
     formResponse: Record<string, any>,
-    fieldValidations: FieldErrors<Record<string, any>>
+    fieldValidations: FieldErrors<Record<string, any>>,
+    canIgnoreErrors: Record<string, boolean>
   ) => void;
 
   // Props for schema form styling and layouting

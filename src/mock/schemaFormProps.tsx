@@ -69,6 +69,13 @@ export const schemaFormProps: ISchemaForm = {
           operator: "===",
         },
       ],
+      removeValidationConditions: [
+        {
+          dependentField: "email",
+          dependentFieldValue: "admin@adimis.in",
+          operator: "!==",
+        },
+      ]
     },
     {
       key: "address",
@@ -94,25 +101,25 @@ export const schemaFormProps: ISchemaForm = {
   persistFormResponse: "sessionStorage",
   width: "100%",
   devTools: true,
-  onChange: (formResponse, fieldValidations) =>
-    console.log("Form OnChange: ", formResponse, fieldValidations),
+  onChange: (formResponse, fieldValidations, canIgnoreErrors) =>
+    console.log("Form OnChange: ", formResponse, fieldValidations, canIgnoreErrors),
   onSubmit: (values) =>
-    console.log("Example Form Response: ", JSON.stringify(values)),
+    console.log("On Submit Example Form Response: ", JSON.stringify(values)),
   header: <h2 className="text-3xl font-bold text-left">Example Form</h2>,
   renderButtons: (formData, handleSubmit) => {
     const buttons: React.ReactNode[] = [];
 
     buttons.push(
       <Button
-        key="With Validation"
+        key="External Submit"
         onClick={() =>
           handleSubmit((formData) =>
-            console.log("With Validation:", formData)
+            console.log("External Submit With Validation:", formData)
           )()
         }
         className="w-full"
       >
-        Okay
+        External Submit
       </Button>
     );
 
@@ -120,7 +127,11 @@ export const schemaFormProps: ISchemaForm = {
       buttons.push(
         <Button
           key="reset"
-          onClick={() => console.log("Form data reset", formData)}
+          onClick={() =>
+            handleSubmit((formData) =>
+              console.log("External Reset With Validation:", formData)
+            )()
+          }
           className="w-full"
         >
           Reset
