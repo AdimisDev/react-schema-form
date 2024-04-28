@@ -1,6 +1,3 @@
-Here's a refined version of the README for your `@adimis/react-schema-form` npm package, structured to be professional and comprehensive:
-
-````md
 # @adimis/react-schema-form
 
 Effortlessly create dynamic forms in React applications with @adimis/react-schema-form. This library leverages modern technologies to provide a robust solution for building and validating forms with ease.
