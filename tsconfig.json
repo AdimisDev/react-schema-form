@@ -28,6 +28,6 @@
     "declaration": true,
     "declarationDir": "dist",
   },
-  "include": ["."],
+  "include": ["./src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
