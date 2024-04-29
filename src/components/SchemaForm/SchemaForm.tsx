@@ -89,8 +89,12 @@ export default function SchemaForm({
       setSubmitButtonLoading(true);
       const result = onSubmit(values);
       if (result instanceof Promise) {
-        result.then(() => setSubmitButtonLoading(false));
+        result.then(() => {
+          localStorage.removeItem(formKey);
+          setSubmitButtonLoading(false);
+        });
       } else {
+        localStorage.removeItem(formKey);
         setSubmitButtonLoading(false);
       }
     }
@@ -147,8 +151,16 @@ export default function SchemaForm({
       setSubmitButtonLoading(true);
       const result = onSubmit(isEveryCheckValid ? formResponse : errors);
       if (result instanceof Promise) {
-        result.then(() => setSubmitButtonLoading(false));
+        result.then(() => {
+          if (isEveryCheckValid) {
+            localStorage.removeItem(formKey);
+          }
+          setSubmitButtonLoading(false);
+        });
       } else {
+        if (isEveryCheckValid) {
+          localStorage.removeItem(formKey);
+        }
         setSubmitButtonLoading(false);
       }
     }
@@ -195,11 +207,11 @@ export default function SchemaForm({
     if (JSON.stringify(watchFields) !== JSON.stringify(formResponse)) {
       setFormResponse(watchFields);
     }
-    return ()=>{
-      localStorage.removeItem(formKey)
-      sessionStorage.removeItem(formKey)
-      setFormResponse({})
-    }
+    return () => {
+      localStorage.removeItem(formKey);
+      sessionStorage.removeItem(formKey);
+      setFormResponse({});
+    };
   }, [
     formErrors,
     watchFields,
