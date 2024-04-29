@@ -32,7 +32,11 @@ function SchemaFormButtons({
     buttons.unshift(
       <Button
         key="submit"
-        className={cn("w-full col-span-4", submitButton?.submitButtonClassName)}
+        className={cn(
+          submitButton?.submitButtonClassName
+            ? submitButton?.submitButtonClassName
+            : "w-full col-span-4"
+        )}
         type="submit"
         variant={submitButton?.submitButtonVarient || "default"}
         loading={isLoading}

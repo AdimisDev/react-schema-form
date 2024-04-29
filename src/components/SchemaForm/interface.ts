@@ -106,6 +106,7 @@ export interface SchemaFormFooterProps {
   submitButton: ISchemaFormProps["submitButton"];
   checkboxes?: ISchemaFormProps["checkboxes"];
   canRemoveValidationFor?: Record<string, boolean>;
+  footerClassName?: ISchemaFormProps["footerClassName"];
 }
 
 export interface ISchemaFormProps {
@@ -127,7 +128,9 @@ export interface ISchemaFormProps {
   // Props for schema form styling and layouting
   panel?: boolean;
   width?: string | number;
-  className?: string;
+  formClassName?: string;
+  fieldsLayoutClassName?: string;
+  footerClassName?: string;
 
   // Props for schema form header and footer
   header?: React.ReactNode;

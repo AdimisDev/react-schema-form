@@ -26,7 +26,6 @@ export default function SchemaForm({
   onSubmit,
   onChange,
   devTools,
-  className,
   submitButton,
   persistFormResponse,
   formName,
@@ -38,6 +37,9 @@ export default function SchemaForm({
   renderFooter,
   showValidationErrors = true,
   panel = true,
+  formClassName,
+  fieldsLayoutClassName,
+  footerClassName,
 }: ISchemaFormProps) {
   const formRef = useRef(null);
   const [submitButtonLoading, setSubmitButtonLoading] = useState(false);
@@ -234,12 +236,18 @@ export default function SchemaForm({
         <ContainerContent>
           <Form {...form}>
             <form
-              className={`gap-4 ${className}`}
+              className={`${formClassName ? formClassName : "gap-4"}`}
               ref={formRef}
               onSubmit={form.handleSubmit(handleSubmit, handleInvalidSubmit)}
             >
               <>
-                <div className="grid grid-row-* grid-col-*">
+                <div
+                  className={
+                    fieldsLayoutClassName
+                      ? fieldsLayoutClassName
+                      : "grid grid-row-* grid-col-*"
+                  }
+                >
                   {schema.map(
                     (formItem) =>
                       visibleFields.has(formItem.key) && (
@@ -279,6 +287,7 @@ export default function SchemaForm({
                   renderFooter={renderFooter}
                   checkboxes={checkboxes}
                   canRemoveValidationFor={canIgnoreErrors}
+                  footerClassName={footerClassName}
                 />
               </>
             </form>

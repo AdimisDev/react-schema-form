@@ -14,6 +14,7 @@ function SchemaFormFooter({
   submitButtonLoading,
   checkboxes,
   canRemoveValidationFor,
+  footerClassName,
 }: SchemaFormFooterProps) {
   const emptyPersistedFormState = () =>
     localStorage.removeItem(formKey.toString());
@@ -32,7 +33,11 @@ function SchemaFormFooter({
     <div>
       <div>{links}</div>
 
-      <div className="grid grid-rows-2 gap-2 mt-5">
+      <div
+        className={
+          footerClassName ? footerClassName : "grid grid-rows-2 gap-2 mt-5"
+        }
+      >
         <SchemaFormButtons
           formResponse={formResponse}
           formKey={formKey}
