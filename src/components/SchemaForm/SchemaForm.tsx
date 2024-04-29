@@ -195,6 +195,11 @@ export default function SchemaForm({
     if (JSON.stringify(watchFields) !== JSON.stringify(formResponse)) {
       setFormResponse(watchFields);
     }
+    return ()=>{
+      localStorage.removeItem(formKey)
+      sessionStorage.removeItem(formKey)
+      setFormResponse({})
+    }
   }, [
     formErrors,
     watchFields,

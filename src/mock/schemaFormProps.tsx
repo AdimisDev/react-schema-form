@@ -98,6 +98,19 @@ export const schemaFormProps: ISchemaFormProps = {
       validations: formValidations.phone,
     },
   ],
+  multiStepFormSteps: {
+    step_1: {
+      stageLabel: "Step 1",
+      fields: ["email", "password", "username"],
+    },
+    step_2: {
+      stageLabel: "Step 2",
+      fields: ["address", "phone"],
+    },
+  },
+  // renderFooter:(formResponse)=>{
+  //   return <></>
+  // },
   persistFormResponse: "sessionStorage",
   width: "100%",
   devTools: true,

@@ -56,6 +56,9 @@ All fields include all functionalities from either the rsuite or any popular pac
 - [ ] OTP Input
 - [ ] Textarea Input
 - [ ] Select Picker
+  - [ ] Async 
+  - [ ] Group 
+  - [ ] Multi-Select 
 - [ ] Radio Group
 - [ ] Toggle
 - [ ] Checkbox
