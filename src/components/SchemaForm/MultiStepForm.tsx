@@ -14,7 +14,7 @@ import { useRef, useState, useEffect } from "react";
 import { generateDynamicSchema } from "../../lib/utils/generateDynamicSchema";
 import renderField from "./renderField";
 import { IMultiStepSchemaFormProps } from "./interface";
-import { Card, CardContent, CardHeader } from "../ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import SchemaFormFooter from "./SchemaFormFooter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -34,11 +34,12 @@ export default function MultiStepForm({
   submitButton,
   persistFormResponse,
   formName,
+  description,
   width,
   renderButtons,
   checkboxes,
   links,
-  header,
+  renderHeader,
   renderFooter,
   multiStepFormSteps,
   showValidationErrors = true,
@@ -256,8 +257,17 @@ export default function MultiStepForm({
       <Container className={`w-full h-full max-w-[${width}]`}>
         <ContainerHeader>
           {devTools && <DevTool control={form.control} />}
-          {header && (
-            <div className={`${panel ? undefined : "mb-6"}`}>{header}</div>
+          {renderHeader ? (
+            renderHeader(CardTitle, CardDescription)
+          ) : (
+            <>
+              <CardTitle>
+                {formName}
+              </CardTitle>
+              <CardDescription>
+                {description}
+              </CardDescription>
+            </>
           )}
         </ContainerHeader>
         <ContainerContent>

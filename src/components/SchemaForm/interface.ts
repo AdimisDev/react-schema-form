@@ -111,6 +111,7 @@ export interface SchemaFormFooterProps {
 export interface ISchemaFormProps {
   // Schema Form Settings
   formName: string;
+  description?: string;
   schema: IFieldSchema[];
   persistFormResponse?: "localStorage" | "sessionStorage" | undefined;
   devTools?: boolean;
@@ -132,7 +133,16 @@ export interface ISchemaFormProps {
   footerClassName?: string;
 
   // Props for schema form header and footer
-  header?: React.ReactNode;
+  renderHeader?: (
+    CardTitle: React.ForwardRefExoticComponent<
+      React.HTMLAttributes<HTMLHeadingElement> &
+        React.RefAttributes<HTMLParagraphElement>
+    >,
+    CardDescription: React.ForwardRefExoticComponent<
+      React.HTMLAttributes<HTMLParagraphElement> &
+        React.RefAttributes<HTMLParagraphElement>
+    >
+  ) => React.ReactNode;
   links?: React.ReactNode;
   checkboxes?: {
     className?: string;
@@ -165,6 +175,7 @@ export interface ISchemaFormProps {
 export interface IMultiStepSchemaFormProps {
   // Schema Form Settings
   formName: string;
+  description?: string;
   schema: IFieldSchema[];
   persistFormResponse?: "localStorage" | "sessionStorage" | undefined;
   devTools?: boolean;
@@ -191,7 +202,16 @@ export interface IMultiStepSchemaFormProps {
   >;
 
   // Props for schema form header and footer
-  header?: React.ReactNode;
+  renderHeader?: (
+    CardTitle: React.ForwardRefExoticComponent<
+      React.HTMLAttributes<HTMLHeadingElement> &
+        React.RefAttributes<HTMLParagraphElement>
+    >,
+    CardDescription: React.ForwardRefExoticComponent<
+      React.HTMLAttributes<HTMLParagraphElement> &
+        React.RefAttributes<HTMLParagraphElement>
+    >
+  ) => React.ReactNode;
   links?: React.ReactNode;
   checkboxes?: {
     className?: string;
