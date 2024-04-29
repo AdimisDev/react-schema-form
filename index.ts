@@ -1,5 +1,6 @@
 export * from "./src/components/SchemaForm/interface";
 
-import SchemaForm from "./src/components/SchemaForm/SchemaForm";
+import MultiStepForm from "@/components/SchemaForm/MultiStepForm";
+import SchemaForm from "@/components/SchemaForm/SchemaForm";
 
-export default SchemaForm;
+export { SchemaForm, MultiStepForm };

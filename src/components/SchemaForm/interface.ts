@@ -128,6 +128,58 @@ export interface ISchemaFormProps {
   panel?: boolean;
   width?: string | number;
   className?: string;
+
+  // Props for schema form header and footer
+  header?: React.ReactNode;
+  links?: React.ReactNode;
+  checkboxes?: {
+    className?: string;
+    items: IFieldSchema[];
+  };
+  submitButton?: {
+    submitButtonClassName?: string;
+    submitButtonVarient?: ButtonProps["variant"];
+    submitButtonName?: string | ReactNode;
+    hideSubmit?: boolean;
+    disabledSubmit?: boolean;
+    loading?: boolean;
+  };
+  renderButtons?: (
+    formResponse: Record<string, any>,
+    handleSubmit: UseFormHandleSubmit<Record<string, any>, undefined>,
+    formErrors: FieldErrors<Record<string, any>>,
+    emptyFormPersistedData: () => void,
+    canRemoveValidationFor?: Record<string, boolean>
+  ) => React.ReactNode[];
+  renderFooter?: (
+    formResponse: Record<string, any>,
+    handleSubmit: UseFormHandleSubmit<Record<string, any>, undefined>,
+    formErrors: FieldErrors<Record<string, any>>,
+    emptyFormPersistedData: () => void,
+    canRemoveValidationFor?: Record<string, boolean>
+  ) => React.ReactNode;
+}
+
+export interface IMultiStepSchemaFormProps {
+  // Schema Form Settings
+  formName: string;
+  schema: IFieldSchema[];
+  persistFormResponse?: "localStorage" | "sessionStorage" | undefined;
+  devTools?: boolean;
+  showValidationErrors?: boolean;
+
+  // Schema Form Callbacks
+  onSubmit?: (values: Record<string, any>) => Promise<void> | void;
+  onChange?: (
+    formResponse: Record<string, any>,
+    formErrors: FieldErrors<Record<string, any>>,
+    canRemoveValidationFor: Record<string, boolean>
+  ) => void;
+
+  // Props for schema form styling and layouting
+  panel?: boolean;
+  width?: string | number;
+  className?: string;
   multiStepFormSteps?: Record<
     string,
     {

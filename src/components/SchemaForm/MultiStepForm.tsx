@@ -13,15 +13,19 @@ import {
 import { useRef, useState, useEffect } from "react";
 import { generateDynamicSchema } from "../../lib/utils/generateDynamicSchema";
 import renderField from "./renderField";
-import { ISchemaFormProps } from "./interface";
+import { IMultiStepSchemaFormProps } from "./interface";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import SchemaFormFooter from "./SchemaFormFooter";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import { z } from "zod";
-import { updateFieldVisibility } from "@/lib/utils/updateFieldVisibility";
+import {
+  updateFieldVisibility,
+} from "@/lib/utils/updateFieldVisibility";
 import "../../index.css";
 import { checkRemoveValidationCondition } from "@/lib/utils/checkRemoveValidationCondition";
 
-export default function SchemaForm({
+export default function MultiStepForm({
   schema,
   onSubmit,
   onChange,
@@ -36,15 +40,16 @@ export default function SchemaForm({
   links,
   header,
   renderFooter,
+  multiStepFormSteps,
   showValidationErrors = true,
   panel = true,
-}: ISchemaFormProps) {
+}: IMultiStepSchemaFormProps) {
   const formRef = useRef(null);
   const [submitButtonLoading, setSubmitButtonLoading] = useState(false);
   const [canIgnoreErrors, setCanIgnoreErrors] = useState<
     Record<string, boolean>
   >({});
-  const formKey = formName + "_schema_form";
+  const formKey = formName + "_multi_step_schema_form";
   const getInitialValues = () => {
     const savedValues =
       persistFormResponse === "localStorage"
@@ -59,6 +64,10 @@ export default function SchemaForm({
   };
 
   const initialFormValues = getInitialValues();
+
+  const [currentStep, setCurrentStep] = useState(
+    Object.keys(multiStepFormSteps ? multiStepFormSteps : {})[0]
+  );
 
   const allFields = checkboxes ? [...schema, ...checkboxes.items] : schema;
   const zodSchema = generateDynamicSchema(allFields);
@@ -154,6 +163,26 @@ export default function SchemaForm({
   const ContainerContent = panel ? CardContent : "div";
   const ContainerHeader = panel ? CardHeader : "div";
 
+  // Multi Step Form Variables
+  const stepKeys = Object.keys(multiStepFormSteps ? multiStepFormSteps : {});
+  const isLastStep = currentStep === stepKeys[stepKeys.length - 1];
+
+  const handleNext = () => {
+    const currentIndex = stepKeys.indexOf(currentStep);
+    const nextIndex = currentIndex + 1;
+    if (nextIndex < stepKeys.length) {
+      setCurrentStep(stepKeys[nextIndex]);
+    }
+  };
+
+  const handlePrev = () => {
+    const currentIndex = stepKeys.indexOf(currentStep);
+    const prevIndex = currentIndex - 1;
+    if (prevIndex >= 0) {
+      setCurrentStep(stepKeys[prevIndex]);
+    }
+  };
+
   useEffect(() => {
     if (onChange) {
       onChange(watchFields, formErrors, canIgnoreErrors);
@@ -238,49 +267,91 @@ export default function SchemaForm({
               ref={formRef}
               onSubmit={form.handleSubmit(handleSubmit, handleInvalidSubmit)}
             >
-              <>
-                <div className="grid grid-row-* grid-col-*">
-                  {schema.map(
-                    (formItem) =>
-                      visibleFields.has(formItem.key) && (
-                        <FormField
-                          key={formItem.key}
-                          name={formItem.key as string}
-                          control={form.control}
-                          render={({ field }) => {
-                            return (
-                              <FormItem>
-                                <FormLabel>{formItem.title}</FormLabel>
-                                <FormControl>
-                                  {renderField(formItem, field)}
-                                </FormControl>
-                                {formItem.description && (
-                                  <FormDescription>
-                                    {formItem.description}
-                                  </FormDescription>
-                                )}
-                                {showValidationErrors && <FormMessage />}
-                              </FormItem>
+              {multiStepFormSteps && (
+                <>
+                  <Tabs
+                    defaultValue={Object.keys(multiStepFormSteps)[0]}
+                    value={currentStep}
+                    onValueChange={setCurrentStep}
+                  >
+                    <TabsList>
+                      {Object.entries(multiStepFormSteps).map(
+                        ([key, value]) => (
+                          <TabsTrigger key={key} value={key}>
+                            {value.stageLabel}
+                          </TabsTrigger>
+                        )
+                      )}
+                    </TabsList>
+                    {Object.entries(multiStepFormSteps).map(([key, value]) => (
+                      <TabsContent key={key} value={key}>
+                        <div className="grid grid-row-* grid-col-* mt-5">
+                          {value.fields?.map((fieldName) => {
+                            if (!fieldName || !visibleFields.has(fieldName))
+                              return null;
+                            const formItem = schema.find(
+                              (item) => item.key === fieldName
                             );
-                          }}
-                        />
-                      )
-                  )}
-                </div>
-                <SchemaFormFooter
-                  formResponse={form.watch()}
-                  key={formKey}
-                  renderButtons={renderButtons}
-                  submitButton={submitButton}
-                  submitButtonLoading={submitButtonLoading}
-                  form={form}
-                  formKey={formKey}
-                  links={links}
-                  renderFooter={renderFooter}
-                  checkboxes={checkboxes}
-                  canRemoveValidationFor={canIgnoreErrors}
-                />
-              </>
+                            if (!formItem) return null;
+
+                            return (
+                              <FormField
+                                key={formItem.key}
+                                name={formItem.key as string}
+                                control={form.control}
+                                render={({ field }) => {
+                                  return (
+                                    <FormItem>
+                                      <FormLabel>{formItem.title}</FormLabel>
+                                      <FormControl>
+                                        {renderField(formItem, field)}
+                                      </FormControl>
+                                      {formItem.description && (
+                                        <FormDescription>
+                                          {formItem.description}
+                                        </FormDescription>
+                                      )}
+                                      {showValidationErrors && <FormMessage />}
+                                    </FormItem>
+                                  );
+                                }}
+                              />
+                            );
+                          })}
+                        </div>
+                        {isLastStep && (
+                          <SchemaFormFooter
+                            formResponse={form.watch()}
+                            key={formKey}
+                            renderButtons={renderButtons}
+                            submitButton={submitButton}
+                            submitButtonLoading={submitButtonLoading}
+                            form={form}
+                            formKey={formKey}
+                            links={links}
+                            renderFooter={renderFooter}
+                            checkboxes={checkboxes}
+                            canRemoveValidationFor={canIgnoreErrors}
+                          />
+                        )}
+                      </TabsContent>
+                    ))}
+                  </Tabs>
+                  <div className="flex justify-between mt-4">
+                    <Button
+                      disabled={
+                        currentStep === Object.keys(multiStepFormSteps)[0]
+                      }
+                      onClick={handlePrev}
+                    >
+                      Prev
+                    </Button>
+                    <Button onClick={handleNext} disabled={isLastStep}>
+                      Next
+                    </Button>
+                  </div>
+                </>
+              )}
             </form>
           </Form>
         </ContainerContent>

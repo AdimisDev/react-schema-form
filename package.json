@@ -2,10 +2,14 @@
   "name": "@adimis/react-schema-form",
   "author": "AdimisDev",
   "private": false,
-  "version": "0.3.7",
+  "version": "0.4.1",
   "type": "module",
   "main": "dist/index.umd.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist/",
+    "README.md"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -68,11 +72,10 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
-    "eslint-plugin-storybook": "^0.8.0",
     "postcss": "^8.4.38",
-    "storybook": "^8.0.9",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.2.2",
-    "vite": "^5.2.0"
+    "vite": "^5.2.0",
+    "vite-bundle-analyzer": "^0.9.4"
   }
 }
