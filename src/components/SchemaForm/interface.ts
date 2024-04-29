@@ -30,7 +30,6 @@ export interface IFieldSchema {
   }>;
   disabled?: boolean;
   validations?: z.ZodType<any, any>;
-  seperator?: boolean; // TODO
   // render prop usage example
   /*
   Example-1:
