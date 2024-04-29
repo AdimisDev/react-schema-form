@@ -13,9 +13,21 @@ function SchemaFormFooter({
   submitButton,
   submitButtonLoading,
   checkboxes,
+  canRemoveValidationFor,
 }: SchemaFormFooterProps) {
+  const emptyPersistedFormState = () =>
+    localStorage.removeItem(formKey.toString());
+
   return renderFooter ? (
-    <React.Fragment>{renderFooter(form.watch())}</React.Fragment>
+    <React.Fragment>
+      {renderFooter(
+        form.watch(),
+        form.handleSubmit,
+        form.formState.errors,
+        emptyPersistedFormState,
+        canRemoveValidationFor
+      )}
+    </React.Fragment>
   ) : (
     <div>
       <div>{links}</div>
@@ -23,11 +35,12 @@ function SchemaFormFooter({
       <div className="grid grid-rows-2 gap-2 mt-5">
         <SchemaFormButtons
           formResponse={formResponse}
-          key={formKey}
+          formKey={formKey}
           renderButtons={renderButtons}
           submitButton={submitButton}
           submitButtonLoading={submitButtonLoading}
           form={form}
+          canRemoveValidationFor={canRemoveValidationFor}
         />
       </div>
       <div

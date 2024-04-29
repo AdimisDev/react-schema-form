@@ -195,11 +195,11 @@ export default function SchemaForm({
     if (JSON.stringify(watchFields) !== JSON.stringify(formResponse)) {
       setFormResponse(watchFields);
     }
-    return ()=>{
-      localStorage.removeItem(formKey)
-      sessionStorage.removeItem(formKey)
-      setFormResponse({})
-    }
+    return () => {
+      localStorage.removeItem(formKey);
+      sessionStorage.removeItem(formKey);
+      setFormResponse({});
+    };
   }, [
     formErrors,
     watchFields,
@@ -331,6 +331,7 @@ export default function SchemaForm({
                             links={links}
                             renderFooter={renderFooter}
                             checkboxes={checkboxes}
+                            canRemoveValidationFor={canIgnoreErrors}
                           />
                         )}
                       </TabsContent>
@@ -391,6 +392,7 @@ export default function SchemaForm({
                     links={links}
                     renderFooter={renderFooter}
                     checkboxes={checkboxes}
+                    canRemoveValidationFor={canIgnoreErrors}
                   />
                 </>
               )}

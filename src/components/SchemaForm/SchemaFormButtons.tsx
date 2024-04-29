@@ -7,20 +7,35 @@ function SchemaFormButtons({
   submitButtonLoading,
   formResponse,
   renderButtons,
+  canRemoveValidationFor,
   form,
+  formKey,
 }: SchemaFormFooterProps) {
+  const emptyPersistedFormState = () =>
+    localStorage.removeItem(formKey.toString());
+
   const buttons: React.ReactNode[] = renderButtons
-    ? renderButtons(formResponse, form.handleSubmit)
+    ? renderButtons(
+        formResponse,
+        form.handleSubmit,
+        form.formState.errors,
+        emptyPersistedFormState,
+        canRemoveValidationFor
+      )
     : [];
 
   if (!submitButton?.hideSubmit) {
+    const isLoading =
+      submitButton?.loading !== undefined
+        ? submitButton.loading
+        : submitButtonLoading;
     buttons.unshift(
       <Button
         key="submit"
         className={cn("w-full col-span-4", submitButton?.submitButtonClassName)}
         type="submit"
         variant={submitButton?.submitButtonVarient || "default"}
-        loading={submitButtonLoading}
+        loading={isLoading}
         disabled={submitButton?.disabledSubmit}
       >
         {submitButton?.submitButtonName || "Submit"}

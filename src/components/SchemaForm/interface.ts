@@ -98,13 +98,14 @@ export interface CustomFieldProps {
 export interface SchemaFormFooterProps {
   form: UseFormReturn<Record<string, any>, any, undefined>;
   formResponse: Record<string, any>;
-  formKey?: string | number;
+  formKey: string;
   submitButtonLoading: boolean;
   links?: ISchemaFormProps["links"];
   renderFooter?: ISchemaFormProps["renderFooter"];
   renderButtons?: ISchemaFormProps["renderButtons"];
   submitButton: ISchemaFormProps["submitButton"];
   checkboxes?: ISchemaFormProps["checkboxes"];
+  canRemoveValidationFor?: Record<string, boolean>;
 }
 
 export interface ISchemaFormProps {
@@ -119,8 +120,8 @@ export interface ISchemaFormProps {
   onSubmit?: (values: Record<string, any>) => Promise<void> | void;
   onChange?: (
     formResponse: Record<string, any>,
-    fieldValidations: FieldErrors<Record<string, any>>,
-    canIgnoreErrors: Record<string, boolean>
+    formErrors: FieldErrors<Record<string, any>>,
+    canRemoveValidationFor: Record<string, boolean>
   ) => void;
 
   // Props for schema form styling and layouting
@@ -138,20 +139,30 @@ export interface ISchemaFormProps {
   // Props for schema form header and footer
   header?: React.ReactNode;
   links?: React.ReactNode;
+  checkboxes?: {
+    className?: string;
+    items: IFieldSchema[];
+  };
   submitButton?: {
     submitButtonClassName?: string;
     submitButtonVarient?: ButtonProps["variant"];
     submitButtonName?: string | ReactNode;
     hideSubmit?: boolean;
     disabledSubmit?: boolean;
+    loading?: boolean;
   };
   renderButtons?: (
-    formData: Record<string, any>,
-    handleSubmit: UseFormHandleSubmit<Record<string, any>, undefined>
+    formResponse: Record<string, any>,
+    handleSubmit: UseFormHandleSubmit<Record<string, any>, undefined>,
+    formErrors: FieldErrors<Record<string, any>>,
+    emptyFormPersistedData: () => void,
+    canRemoveValidationFor?: Record<string, boolean>
   ) => React.ReactNode[];
-  checkboxes?: {
-    className?: string;
-    items: IFieldSchema[];
-  };
-  renderFooter?: (formResponse: Record<string, any>) => React.ReactNode;
+  renderFooter?: (
+    formResponse: Record<string, any>,
+    handleSubmit: UseFormHandleSubmit<Record<string, any>, undefined>,
+    formErrors: FieldErrors<Record<string, any>>,
+    emptyFormPersistedData: () => void,
+    canRemoveValidationFor?: Record<string, boolean>
+  ) => React.ReactNode;
 }
