@@ -8,9 +8,6 @@ Effortlessly create dynamic forms in React applications with @adimis/react-schem
 - **Validation with Zod**: Utilize Zod to set up complex validation rules for your forms.
 - **Customizable Styling**: Style your forms with Shadcn UI to ensure they match your application's design.
 - **TypeScript Support**: Benefit from TypeScript's static typing to catch errors at compile time.
-- **Storybook Integration**: Visualize different states of your UI components interactively with Storybook.
-- **Vite Integration**: Enjoy fast development with Vite, a modern front-end build tool.
-- **Hooks Utilization**: Use custom hooks to simplify your code and enhance reusability.
 - **DevTools**: Debug forms with built-in development tools to streamline troubleshooting.
 
 ## Tech Stack
