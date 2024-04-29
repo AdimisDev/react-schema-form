@@ -2,7 +2,7 @@
   "name": "@adimis/react-schema-form",
   "author": "AdimisDev",
   "private": false,
-  "version": "0.4.3",
+  "version": "0.4.4",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.umd.js",
@@ -10,7 +10,8 @@
   "files": [
     "dist/",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "docs/"
   ],
   "publishConfig": {
     "access": "public"
@@ -76,6 +77,7 @@
     "eslint-plugin-react-refresh": "^0.4.6",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3",
+    "typedoc": "^0.25.13",
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
     "vite-bundle-analyzer": "^0.9.4"
