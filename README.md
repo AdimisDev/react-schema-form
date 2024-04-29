@@ -21,6 +21,24 @@ Effortlessly create dynamic forms in React applications with @adimis/react-schem
 - Storybook
 - Vite as the build tool
 
+## Package Size Breakdown
+
+The `@adimis/react-schema-form` package is optimized to ensure functionality while maintaining a manageable bundle size. Here's a breakdown of the contents and their file sizes:
+
+- **Source Code and TypeScript Definitions**: The main functionality of the library, including all components and TypeScript definitions, takes up the bulk of the package size.
+  - `dist/index.es.js` (547.6kB) and its source map (2.0MB)
+  - `dist/index.umd.js` (367.9kB) and its source map (1.9MB)
+- **Documentation and Examples**: Documentation files are included to help you understand and implement the library effectively.
+  - Documentation HTML files (`docs/`) and assets like scripts and styles that total approximately 250kB.
+- **Styles**: Essential CSS for default styling is provided.
+  - `dist/style.css` (21.0kB)
+- **Images and Assets**: Includes the logo which contributes to the visual representation of the library in docs and README.
+  - `dist/adimis-logo-dark.png` (19.3kB)
+
+### Note on Dynamic Imports
+
+When you use specific components like `SchemaForm` or `MultiStepForm`, the actual size impacting your application will be significantly less, as not all parts of the library are loaded at once. This ensures that your application remains lightweight and only loads what is necessary.
+
 ## Installation
 
 ### Step 1: Install the package
@@ -260,7 +278,3 @@ const App = () => {
 
 export default App;
 ```
-
-### Styling and Customization
-
-This package supports Shadcn UI for styling. Customize the look and feel of your forms by overriding the CSS classes provided.
