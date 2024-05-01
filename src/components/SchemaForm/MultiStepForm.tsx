@@ -14,14 +14,18 @@ import { useRef, useState, useEffect } from "react";
 import { generateDynamicSchema } from "../../lib/utils/generateDynamicSchema";
 import renderField from "./renderField";
 import { IMultiStepSchemaFormProps } from "./interface";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import SchemaFormFooter from "./SchemaFormFooter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
-import {
-  updateFieldVisibility,
-} from "@/lib/utils/updateFieldVisibility";
+import { updateFieldVisibility } from "@/lib/utils/updateFieldVisibility";
 import "../../index.css";
 import { checkRemoveValidationCondition } from "@/lib/utils/checkRemoveValidationCondition";
 
@@ -261,12 +265,8 @@ export default function MultiStepForm({
             renderHeader(CardTitle, CardDescription)
           ) : (
             <>
-              <CardTitle>
-                {formName}
-              </CardTitle>
-              <CardDescription>
-                {description}
-              </CardDescription>
+              <CardTitle>{formName}</CardTitle>
+              <CardDescription>{description}</CardDescription>
             </>
           )}
         </ContainerHeader>

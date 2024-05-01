@@ -1,5 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { CustomFieldProps } from "./interface";
+import React from "react";
 
 const CustomField = (props: CustomFieldProps) => {
   const { field, loading, formItem } = props;
@@ -12,7 +13,7 @@ const CustomField = (props: CustomFieldProps) => {
       disabled={formItem.disabled || loading}
       placeholder={formItem.placeholder}
       {...field}
-      onChange={(e) => field.onChange(e.target.value)}
+      onChange={(e:React.ChangeEvent<HTMLInputElement>) => field.onChange(e.target.value)}
     />
   );
 };
