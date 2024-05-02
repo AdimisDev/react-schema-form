@@ -38,9 +38,11 @@ const renderField = (
           disabled={formItem.disabled || loading}
           placeholder={formItem.placeholder}
           {...field}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            field.onChange(e.target.value)
-          }
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            if (e) {
+              field.onChange(e.target.value);
+            }
+          }}
         />
       );
     case "select":
