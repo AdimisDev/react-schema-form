@@ -278,3 +278,11 @@ const App = () => {
 
 export default App;
 ```
+
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request for any bugs, features, or improvements.
+
+## License
+
+This project is licensed under the GNU License - see the [LICENSE](https://github.com/AdimisDev/react-schema-table/blob/main/LICENSE) file for details.
