@@ -12,7 +12,9 @@ const CustomField = (props: CustomFieldProps) => {
       disabled={formItem.disabled || loading}
       placeholder={formItem.placeholder}
       {...field}
-      onChange={(e) => field.onChange(e.target.value)}
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+        field.onChange(e.target.value)
+      }
     />
   );
 };
