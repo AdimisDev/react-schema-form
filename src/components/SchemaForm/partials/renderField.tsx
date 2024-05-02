@@ -19,7 +19,7 @@ import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Textarea } from "@/components/ui/textarea";
-import { IFieldSchema } from "./interface";
+import { IFieldSchema } from "../interface";
 import CustomField from "./CustomField";
 
 const renderField = (

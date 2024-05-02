@@ -1,3 +1,1 @@
-export * from "./src/components/SchemaForm/interface";
-export * from "./src/components/SchemaForm/MultiStepForm";
-export * from "./src/components/SchemaForm/SchemaForm";
+export * from "./src/components/SchemaForm/index";

@@ -11,23 +11,22 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useRef, useState, useEffect } from "react";
-import { generateDynamicSchema } from "../../lib/utils/generateDynamicSchema";
-import renderField from "./renderField";
-import { ISchemaFormProps } from "./interface";
+import { generateDynamicSchema } from "../../../lib/utils/generateDynamicSchema";
+import renderField from "../partials/renderField";
+import { ISchemaFormProps } from "../interface";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
-import SchemaFormFooter from "./SchemaFormFooter";
+} from "../../ui/card";
+import SchemaFormFooter from "../partials/SchemaFormFooter";
 import { z } from "zod";
 import { updateFieldVisibility } from "@/lib/utils/updateFieldVisibility";
-import "../../index.css";
 import { checkRemoveValidationCondition } from "@/lib/utils/checkRemoveValidationCondition";
 
-export default function SchemaForm({
+export function SchemaForm({
   schema,
   onSubmit,
   onChange,
