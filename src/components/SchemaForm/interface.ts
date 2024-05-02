@@ -9,6 +9,12 @@ import {
 import { ButtonProps } from "../ui/button";
 import { z } from "zod";
 
+export interface FieldProps {
+  field: ControllerRenderProps<FieldValues, string>;
+  formItem: IFieldSchema;
+  loading?: boolean;
+}
+
 export interface IFieldSchema {
   key: string;
   title?: string;

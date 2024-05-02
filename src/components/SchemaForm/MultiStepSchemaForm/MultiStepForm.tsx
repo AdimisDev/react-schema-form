@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/form";
 import { useRef, useState, useEffect } from "react";
 import { generateDynamicSchema } from "../../../lib/utils/generateDynamicSchema";
-import renderField from "../partials/renderField";
+import renderField from "../fields/renderField";
 import { IMultiStepSchemaFormProps } from "../interface";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../ui/card";
 import SchemaFormFooter from "../partials/SchemaFormFooter";
