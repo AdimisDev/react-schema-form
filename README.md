@@ -9,6 +9,7 @@ Effortlessly create dynamic forms in React applications with @adimis/react-schem
 - **Customizable Styling**: Style your forms with Shadcn UI to ensure they match your application's design.
 - **TypeScript Support**: Benefit from TypeScript's static typing to catch errors at compile time.
 - **DevTools**: Debug forms with built-in development tools to streamline troubleshooting.
+- **NextJs Support**: Can be used on the client side of your NextJs app.
 
 ## Tech Stack
 
@@ -62,13 +63,14 @@ Below is an example of how to use the Schema Form in your React application.
 ### Example Code
 
 ```tsx
+"use client";
+
 import React from "react";
-import SchemaForm, { ISchemaFormProps } from "@adimis/react-schema-form";
+import { SchemaForm, ISchemaFormProps } from "@adimis/react-schema-form";
 import { z } from "zod";
 import "@adimis/react-schema-form/dist/style.css";
-import { Button } from "./components/ui/button";
 
-const App = () => {
+const DynamicForm = () => {
   const formValidations = {
     username: z
       .string()
@@ -176,12 +178,11 @@ const App = () => {
       ),
     onSubmit: (values) =>
       console.log("On Submit Example Form Response: ", JSON.stringify(values)),
-    header: <h2 className="text-3xl font-bold text-left">Example Form</h2>,
     renderButtons: (formData, handleSubmit) => {
       const buttons: React.ReactNode[] = [];
 
       buttons.push(
-        <Button
+        <button
           key="External Submit"
           onClick={() =>
             handleSubmit((formData) =>
@@ -191,12 +192,12 @@ const App = () => {
           className="w-full"
         >
           External Submit
-        </Button>
+        </button>
       );
 
       if (Object.keys(formData).length > 0) {
         buttons.push(
-          <Button
+          <button
             key="reset"
             onClick={() =>
               handleSubmit((formData) =>
@@ -206,30 +207,30 @@ const App = () => {
             className="w-full"
           >
             Reset
-          </Button>
+          </button>
         );
       }
 
       if (formData.email && formData.email.trim()) {
         buttons.push(
-          <Button
+          <button
             key="special"
             onClick={() => console.log("Special action for email", formData)}
             className="w-full"
           >
             Special Email Action
-          </Button>
+          </button>
         );
       }
 
       buttons.push(
-        <Button
+        <button
           key="something"
           onClick={() => console.log("Okay:", formData)}
           className="w-full"
         >
           Something
-        </Button>
+        </button>
       );
 
       return buttons;
@@ -276,7 +277,7 @@ const App = () => {
   return <SchemaForm {...schemaFormProps} />;
 };
 
-export default App;
+export default DynamicForm;
 ```
 
 ## Contributing

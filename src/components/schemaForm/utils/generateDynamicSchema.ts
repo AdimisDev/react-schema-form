@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { IFieldSchema } from "../../components/SchemaForm/interface";
+import { IFieldSchema } from "../interface";
 
 export const generateDynamicSchema = (fields: IFieldSchema[]) => {
   const schemaObject: any = {};

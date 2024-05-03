@@ -2,9 +2,9 @@
 
 import React from "react";
 import { z } from "zod";
-import { SchemaFormLite } from "./components/SchemaForm copy/SchemaForm/SchemaForm";
-import { ISchemaFormProps } from "./components/SchemaForm/interface";
 import { Button } from "./components/ui/button";
+import { ISchemaFormProps } from "./components/schemaForm/interface";
+import { SchemaForm } from "./components/schemaForm";
 
 const App = () => {
   const formValidations = {
@@ -203,7 +203,7 @@ const App = () => {
     ),
   };
 
-  return <SchemaFormLite {...schemaFormProps} />;
+  return <SchemaForm {...schemaFormProps} />;
 };
 
 export default App;

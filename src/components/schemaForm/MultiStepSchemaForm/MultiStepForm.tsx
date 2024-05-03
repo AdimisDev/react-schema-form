@@ -1,5 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FieldErrors, useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import {
   Form,
@@ -10,10 +8,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useState, useEffect, useMemo, useCallback } from "react";
-import { generateDynamicSchema } from "../../../lib/utils/generateDynamicSchema";
+import { useState } from "react";
 import renderField from "../fields/renderField";
-import { IFieldSchema, IMultiStepSchemaFormProps } from "../interface";
+import { IMultiStepSchemaFormProps } from "../interface";
 import {
   Card,
   CardContent,
@@ -24,233 +21,8 @@ import {
 import SchemaFormFooter from "../partials/SchemaFormFooter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { z } from "zod";
-import { updateFieldVisibility } from "@/lib/utils/updateFieldVisibility";
-import { checkRemoveValidationCondition } from "@/lib/utils/checkRemoveValidationCondition";
-
-const getInitialValues = (
-  formKey: string,
-  schema: IFieldSchema[],
-  persistFormResponse: "localStorage" | "sessionStorage" | undefined,
-  checkboxes:
-    | {
-        className?: string | undefined;
-        items: IFieldSchema[];
-      }
-    | undefined
-): Record<string, any> => {
-  try {
-    const savedValues =
-      persistFormResponse === "localStorage"
-        ? localStorage.getItem(formKey)
-        : sessionStorage.getItem(formKey);
-    const initialData = schema
-      .concat(checkboxes?.items || [])
-      .reduce((acc, item) => ({ ...acc, [item.key]: item.defaultValue }), {});
-    return savedValues
-      ? { ...initialData, ...JSON.parse(savedValues) }
-      : initialData;
-  } catch (error) {
-    throw new Error("getInitialValues:\n" + JSON.stringify(error));
-  }
-};
-
-function onErrorRemoveValidationCheck(
-  errors: Record<string, any>,
-  schema: IFieldSchema[],
-  formResponse: Record<string, any>,
-  setCanRemoveValidationFor: React.Dispatch<
-    React.SetStateAction<Record<string, boolean>>
-  >
-): boolean {
-  try {
-    const allRemoveValidationChecks: boolean[] = Object.keys(errors).map(
-      (key) => {
-        const errorFieldRemoveValidationConditions:
-          | {
-              dependentField: string;
-              operator: "===" | "!==" | "<" | "<=" | ">" | ">=";
-              dependentFieldValue: any;
-              relation?: "and";
-            }[]
-          | undefined = schema.find(
-          (field) => field.key === key
-        )?.removeValidationConditions;
-
-        const fieldValidationRemoveApproved = checkRemoveValidationCondition(
-          errorFieldRemoveValidationConditions,
-          formResponse
-        );
-
-        if (fieldValidationRemoveApproved) {
-          setCanRemoveValidationFor((prev) => {
-            return {
-              ...prev,
-              [key]: true,
-            };
-          });
-        } else {
-          setCanRemoveValidationFor((prev) => {
-            return {
-              ...prev,
-              [key]: false,
-            };
-          });
-        }
-        return fieldValidationRemoveApproved;
-      }
-    );
-
-    const isEveryCheckValid = allRemoveValidationChecks.every((valid) => valid);
-
-    return isEveryCheckValid;
-  } catch (error) {
-    throw new Error("onErrorRemoveValidationCheck:\n" + JSON.stringify(error));
-  }
-}
-
-function onChangeRemoveValidationCheck(
-  schema: IFieldSchema[],
-  formResponse: Record<string, any>,
-  setCanRemoveValidationFor: React.Dispatch<
-    React.SetStateAction<Record<string, boolean>>
-  >
-) {
-  const isEveryCheckValid = Object.keys(formResponse).map((key) => {
-    const errorFieldRemoveValidationConditions:
-      | {
-          dependentField: string;
-          operator: "===" | "!==" | "<" | "<=" | ">" | ">=";
-          dependentFieldValue: any;
-          relation?: "and";
-        }[]
-      | undefined = schema.find(
-      (field) => field.key === key
-    )?.removeValidationConditions;
-
-    const fieldValidationRemoveApproved = checkRemoveValidationCondition(
-      errorFieldRemoveValidationConditions,
-      formResponse
-    );
-
-    if (fieldValidationRemoveApproved) {
-      setCanRemoveValidationFor((prev) => {
-        return {
-          ...prev,
-          [key]: true,
-        };
-      });
-    } else {
-      setCanRemoveValidationFor((prev) => {
-        return {
-          ...prev,
-          [key]: false,
-        };
-      });
-    }
-    return fieldValidationRemoveApproved;
-  });
-  return isEveryCheckValid;
-}
-
-function useFormState(
-  formName: string,
-  schema: IFieldSchema[],
-  persistFormResponse: "localStorage" | "sessionStorage" | undefined,
-  checkboxes:
-    | {
-        className?: string | undefined;
-        items: IFieldSchema[];
-      }
-    | undefined,
-  onChange?: (
-    formResponse: Record<string, any>,
-    formErrors: FieldErrors<Record<string, any>>,
-    canRemoveValidationFor: Record<string, boolean>
-  ) => void,
-  validationMode?:
-    | "onBlur"
-    | "onChange"
-    | "onSubmit"
-    | "onTouched"
-    | "all"
-    | undefined,
-  reValidateMode?: "onBlur" | "onChange" | "onSubmit" | undefined
-) {
-  const formKey = formName + "_schema_form";
-  const defaultValues = getInitialValues(
-    formKey,
-    schema,
-    persistFormResponse,
-    checkboxes
-  );
-
-  const [submitButtonLoading, setSubmitButtonLoading] = useState(false);
-  const [canRemoveValidationFor, setCanRemoveValidationFor] = useState<
-    Record<string, boolean>
-  >({});
-  const [visibleFields, setVisibleFields] = useState(
-    new Set(schema.map((item) => item.key))
-  );
-
-  const zodSchema = useMemo(() => {
-    const allFields = checkboxes ? [...schema, ...checkboxes.items] : schema;
-    return generateDynamicSchema(allFields);
-  }, [checkboxes, schema]);
-
-  const formMethods = useForm<z.infer<typeof zodSchema>>({
-    resolver: zodResolver(zodSchema),
-    mode: validationMode ? validationMode : "onChange",
-    reValidateMode: reValidateMode ? reValidateMode : "onChange",
-    defaultValues: defaultValues,
-  });
-
-  const handleOnChange = useCallback(() => {
-    if (onChange) {
-      const formResponse = formMethods.getValues();
-      onChange(
-        formResponse,
-        formMethods.formState.errors,
-        canRemoveValidationFor
-      );
-      formMethods.clearErrors();
-    }
-  }, [onChange, formMethods, canRemoveValidationFor]);
-
-  useEffect(() => {
-    const subscription = formMethods.watch((_, { type }) => {
-      if (type !== "focus") {
-        handleOnChange();
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, [handleOnChange, formMethods]);
-
-  useEffect(() => {
-    onChangeRemoveValidationCheck(
-      schema,
-      formMethods.getValues(),
-      setCanRemoveValidationFor
-    );
-  }, [schema, formMethods, setCanRemoveValidationFor]);
-
-  useEffect(() => {
-    updateFieldVisibility(schema, formMethods.getValues(), setVisibleFields);
-  }, [schema, formMethods, setVisibleFields]);
-
-  return {
-    formKey,
-    allFields: checkboxes ? [...schema, ...checkboxes.items] : schema,
-    formState: formMethods.formState,
-    formMethods,
-    visibleFields,
-    setVisibleFields,
-    submitButtonLoading,
-    setSubmitButtonLoading,
-    canRemoveValidationFor,
-    setCanRemoveValidationFor,
-  };
-}
+import { useFormState } from "../hooks/useFormState";
+import { onErrorRemoveValidationCheck } from "../utils/removeValidationCheck";
 
 export function MultiStepSchemaForm({
   schema,
@@ -319,7 +91,7 @@ export function MultiStepSchemaForm({
   function handleInvalidSubmit(errors: Record<string, any>) {
     try {
       if (onSubmit) {
-        const formResponse = formMethods.watch();
+        const formResponse = formMethods.getValues();
         const isEveryCheckValid = onErrorRemoveValidationCheck(
           errors,
           schema,
