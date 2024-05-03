@@ -20,7 +20,7 @@ import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Textarea } from "@/components/ui/textarea";
 import { IFieldSchema } from "./interface";
-import CustomField from "./CustomField";
+import CustomField from "./fields/CustomField";
 
 const renderField = (
   formItem: IFieldSchema,
