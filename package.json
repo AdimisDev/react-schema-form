@@ -2,10 +2,12 @@
   "name": "@adimis/react-schema-form",
   "author": "AdimisDev",
   "private": false,
-  "version": "0.5.3",
+  "version": "0.5.4",
   "license": "GNU",
   "type": "module",
   "main": "dist/index.umd.js",
+  "module": "dist/index.es.js",
+  "umd:main": "dist/index.umd.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist/",
