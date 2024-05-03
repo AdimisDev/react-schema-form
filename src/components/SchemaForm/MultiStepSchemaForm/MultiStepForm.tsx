@@ -137,12 +137,12 @@ export function MultiStepSchemaForm({
           return fieldValidationRemoveApproved;
         }
       );
-      console.log("allRemoveValidationChecks: ", allRemoveValidationChecks);
+      // console.log("allRemoveValidationChecks: ", allRemoveValidationChecks);
 
       const isEveryCheckValid = allRemoveValidationChecks.every(
         (valid) => valid
       );
-      console.log("isEveryCheckValid: ", isEveryCheckValid, formResponse);
+      // console.log("isEveryCheckValid: ", isEveryCheckValid, formResponse);
 
       setSubmitButtonLoading(true);
       const result = onSubmit(isEveryCheckValid ? formResponse : errors);

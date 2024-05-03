@@ -95,60 +95,67 @@ export function SchemaForm({
     }
   }
 
+  function handleRemoveAllValidationChecks(errors: Record<string, any>) {
+    const allRemoveValidationChecks: boolean[] = Object.keys(errors).map(
+      (key) => {
+        const errorFieldRemoveValidationConditions:
+          | {
+              dependentField: string;
+              operator: "===" | "!==" | "<" | "<=" | ">" | ">=";
+              dependentFieldValue: any;
+              relation?: "and";
+            }[]
+          | undefined = schema.find(
+          (field) => field.key === key
+        )?.removeValidationConditions;
+
+        const fieldValidationRemoveApproved = checkRemoveValidationCondition(
+          errorFieldRemoveValidationConditions,
+          formResponse
+        );
+
+        if (fieldValidationRemoveApproved) {
+          setCanIgnoreErrors((prev) => {
+            return {
+              ...prev,
+              [key]: true,
+            };
+          });
+        } else {
+          setCanIgnoreErrors((prev) => {
+            return {
+              ...prev,
+              [key]: false,
+            };
+          });
+        }
+        return fieldValidationRemoveApproved;
+      }
+    );
+    // console.log("allRemoveValidationChecks: ", allRemoveValidationChecks);
+
+    const isEveryCheckValid = allRemoveValidationChecks.every((valid) => valid);
+    // console.log("isEveryCheckValid: ", isEveryCheckValid, formResponse);
+
+    return isEveryCheckValid;
+  }
+
   function handleInvalidSubmit(errors: Record<string, any>) {
     if (onSubmit) {
       const formResponse = form.watch();
       console.error("Invalid Submit: ", errors);
-
-      const allRemoveValidationChecks: boolean[] = Object.keys(errors).map(
-        (key) => {
-          const errorFieldRemoveValidationConditions:
-            | {
-                dependentField: string;
-                operator: "===" | "!==" | "<" | "<=" | ">" | ">=";
-                dependentFieldValue: any;
-                relation?: "and";
-              }[]
-            | undefined = schema.find(
-            (field) => field.key === key
-          )?.removeValidationConditions;
-
-          const fieldValidationRemoveApproved = checkRemoveValidationCondition(
-            errorFieldRemoveValidationConditions,
-            formResponse
-          );
-
-          if (fieldValidationRemoveApproved) {
-            setCanIgnoreErrors((prev) => {
-              return {
-                ...prev,
-                [key]: true,
-              };
-            });
-          } else {
-            setCanIgnoreErrors((prev) => {
-              return {
-                ...prev,
-                [key]: false,
-              };
-            });
-          }
-          return fieldValidationRemoveApproved;
-        }
-      );
-      console.log("allRemoveValidationChecks: ", allRemoveValidationChecks);
-
-      const isEveryCheckValid = allRemoveValidationChecks.every(
-        (valid) => valid
-      );
-      console.log("isEveryCheckValid: ", isEveryCheckValid, formResponse);
-
-      setSubmitButtonLoading(true);
-      const result = onSubmit(isEveryCheckValid ? formResponse : errors);
-      if (result instanceof Promise) {
-        result.then(() => setSubmitButtonLoading(false));
+      const isEveryCheckValid = handleRemoveAllValidationChecks(errors);
+      console.log("isEveryCheckValid", isEveryCheckValid);
+      if (!isEveryCheckValid) {
+        // setSubmitButtonLoading(true);
+        // const result = onSubmit(isEveryCheckValid ? formResponse : errors);
+        // if (result instanceof Promise) {
+        //   result.then(() => setSubmitButtonLoading(false));
+        // } else {
+        //   setSubmitButtonLoading(false);
+        // }
       } else {
-        setSubmitButtonLoading(false);
+        throw new Error(JSON.stringify(errors));
       }
     }
   }
@@ -239,12 +246,8 @@ export function SchemaForm({
             renderHeader(CardTitle, CardDescription)
           ) : (
             <>
-              <CardTitle>
-                {formName}
-              </CardTitle>
-              <CardDescription>
-                {description}
-              </CardDescription>
+              <CardTitle>{formName}</CardTitle>
+              <CardDescription>{description}</CardDescription>
             </>
           )}
         </ContainerHeader>
