@@ -11,7 +11,6 @@ export const getInitialValues = (
       }
     | undefined
 ): Record<string, any> => {
-  const functionName = 'getInitialValues'; // Define the function name as a constant
   let savedValues: Record<string, any> = {};
   if (typeof window !== 'undefined') {
     const storage = persistFormResponse === "localStorage" ? window.localStorage : window.sessionStorage;
@@ -20,14 +19,15 @@ export const getInitialValues = (
         const item = storage.getItem(formKey);
         if (item) {
           savedValues = JSON.parse(item);
-          console.log(`[${functionName}] Retrieved saved values: `, savedValues);
-        } else {
-          console.log(`[${functionName}] No saved values found for key: ${formKey}`);
         }
       } catch (error) {
-        console.error(`[${functionName}] Error parsing ${persistFormResponse} data: `, error);
+        return {};
       }
     }
+  }
+
+  if (!schema) {
+    return {};
   }
 
   const initialData = schema
@@ -37,6 +37,5 @@ export const getInitialValues = (
       return acc;
     }, {});
 
-  console.log(`[${functionName}] Initial data after merge: `, initialData);
   return initialData;
 };
