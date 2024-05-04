@@ -50,6 +50,7 @@ const App = () => {
         key: "email",
         title: "Email",
         helpText: "Enter your email",
+        autoComplete: "email",
         type: "email",
         placeholder: "Enter your email",
         defaultValue: "",
@@ -63,7 +64,7 @@ const App = () => {
         type: "password",
         placeholder: "Enter your password",
         defaultValue: "",
-        autoComplete: "new-password",
+        autoComplete: "current-password",
         disabled: false,
         validations: formValidations.password,
         displayConditions: [
@@ -85,6 +86,7 @@ const App = () => {
         key: "address",
         title: "Address",
         helpText: "Enter your address",
+        autoComplete: "address-level1",
         type: "text",
         placeholder: "1234 Main St",
         defaultValue: "",
@@ -94,6 +96,7 @@ const App = () => {
       {
         key: "phone",
         title: "Phone Number",
+        autoComplete: "tel",
         helpText: "Enter your phone number",
         type: "tel",
         placeholder: "Enter your phone number",

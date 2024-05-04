@@ -4,13 +4,32 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { generateDynamicSchema } from "../utils/generateDynamicSchema";
 import { IFieldSchema } from "../interface";
 import { z } from "zod";
-import { getInitialValues } from "../utils/getInitialValues";
 import { onChangeRemoveValidationCheck } from "../utils/removeValidationCheck";
 import { updateFieldVisibility } from "../utils/updateFieldVisibility";
 
+function handleStorage(
+  key: string,
+  persistFormResponse: "localStorage" | "sessionStorage",
+  value: Record<string, any>
+) {
+  if (
+    typeof window !== "undefined" &&
+    window.localStorage &&
+    window.sessionStorage
+  ) {
+    switch (persistFormResponse) {
+      case "localStorage":
+        return localStorage.setItem(key, JSON.stringify(value));
+      case "sessionStorage":
+        return sessionStorage.setItem(key, JSON.stringify(value));
+    }
+  }
+}
+
 export function useFormState(
-  formName: string,
+  formKey: string,
   schema: IFieldSchema[],
+  defaultValues: Record<string, any>,
   persistFormResponse: "localStorage" | "sessionStorage" | undefined,
   checkboxes:
     | {
@@ -32,14 +51,6 @@ export function useFormState(
     | undefined,
   reValidateMode?: "onBlur" | "onChange" | "onSubmit" | undefined
 ) {
-  const formKey = formName + "_schema_form";
-  const defaultValues = getInitialValues(
-    formKey,
-    schema,
-    persistFormResponse,
-    checkboxes
-  );
-
   const [submitButtonLoading, setSubmitButtonLoading] = useState(false);
   const [canRemoveValidationFor, setCanRemoveValidationFor] = useState<
     Record<string, boolean>
@@ -61,7 +72,7 @@ export function useFormState(
   });
 
   const handleOnChange = useCallback(() => {
-    const formValues = formMethods.getValues();
+    const formValues = formMethods.watch();
     if (onChange) {
       const formResponse = formValues;
       onChange(
@@ -77,19 +88,37 @@ export function useFormState(
       setCanRemoveValidationFor
     );
     updateFieldVisibility(schema, formValues, setVisibleFields);
-  }, [onChange, formMethods, canRemoveValidationFor, schema]);
+  }, [
+    onChange,
+    formMethods,
+    canRemoveValidationFor,
+    schema,
+  ]);
+
+  const handleStorageChange = useCallback(() => {
+    const formValues = formMethods.watch();
+    if(persistFormResponse){
+      handleStorage(formKey, persistFormResponse, formValues);
+    }
+  }, [
+    formKey,
+    formMethods,
+    persistFormResponse,
+  ]);
 
   useEffect(() => {
     const subscription = formMethods.watch((_, { type }) => {
       if (type !== "focus") {
         handleOnChange();
+        handleStorageChange();
       }
     });
-    return () => subscription.unsubscribe();
-  }, [handleOnChange, formMethods]);
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [handleOnChange, formMethods, handleStorageChange]);
 
   return {
-    formKey,
     allFields: checkboxes ? [...schema, ...checkboxes.items] : schema,
     formState: formMethods.formState,
     formMethods,

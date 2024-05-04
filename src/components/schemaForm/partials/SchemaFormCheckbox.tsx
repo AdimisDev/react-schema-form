@@ -24,7 +24,6 @@ function SchemaFormCheckbox({
                 defaultChecked={field.value}
                 value={field.value}
                 onClick={() => {
-                  console.log("Checkbox onchange: ", !field.value);
                   field.onChange(!field.value);
                 }}
               />

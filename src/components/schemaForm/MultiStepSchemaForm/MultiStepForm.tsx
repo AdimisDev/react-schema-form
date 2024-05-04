@@ -23,6 +23,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useFormState } from "../hooks/useFormState";
 import { onErrorRemoveValidationCheck } from "../utils/removeValidationCheck";
+import { getInitialValues } from "../utils/getInitialValues";
 
 export function MultiStepSchemaForm({
   schema,
@@ -53,17 +54,25 @@ export function MultiStepSchemaForm({
     Object.keys(multiStepFormSteps ? multiStepFormSteps : {})[0]
   );
 
-  const {
+  const formKey = formName + "_schema_form";
+  const defaultValues = getInitialValues(
     formKey,
+    schema,
+    persistFormResponse,
+    checkboxes
+  );
+
+  const {
     formMethods,
     visibleFields,
     submitButtonLoading,
-    canRemoveValidationFor,
     setSubmitButtonLoading,
+    canRemoveValidationFor,
     setCanRemoveValidationFor,
   } = useFormState(
-    formName,
+    formKey,
     schema,
+    defaultValues,
     persistFormResponse,
     checkboxes,
     onChange,

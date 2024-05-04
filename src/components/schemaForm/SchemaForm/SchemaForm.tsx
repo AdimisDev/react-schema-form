@@ -20,6 +20,7 @@ import {
 import SchemaFormFooter from "../partials/SchemaFormFooter";
 import { useFormState } from "../hooks/useFormState";
 import { onErrorRemoveValidationCheck } from "../utils/removeValidationCheck";
+import { getInitialValues } from "../utils/getInitialValues";
 
 export function SchemaForm({
   schema,
@@ -47,9 +48,15 @@ export function SchemaForm({
   const Container = panel ? Card : "div";
   const ContainerContent = panel ? CardContent : "div";
   const ContainerHeader = panel ? CardHeader : "div";
+  const formKey = formName + "_schema_form";
+  const defaultValues = getInitialValues(
+    formKey,
+    schema,
+    persistFormResponse,
+    checkboxes
+  );
 
   const {
-    formKey,
     formMethods,
     visibleFields,
     submitButtonLoading,
@@ -57,8 +64,9 @@ export function SchemaForm({
     canRemoveValidationFor,
     setCanRemoveValidationFor,
   } = useFormState(
-    formName,
+    formKey,
     schema,
+    defaultValues,
     persistFormResponse,
     checkboxes,
     onChange,
