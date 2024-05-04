@@ -1,5 +1,5 @@
 import { IFieldSchema } from "../interface";
-import CustomField from "./CustomField";
+import { CustomField } from "./CustomField";
 import {
   TextField,
   DateField,

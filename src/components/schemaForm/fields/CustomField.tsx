@@ -1,7 +1,7 @@
+import { CustomFieldProps } from "@/components/schemaForm/interface";
 import { Input } from "@/components/ui/input";
-import { CustomFieldProps } from "../interface";
 
-const CustomField = (props: CustomFieldProps) => {
+export function CustomField(props: CustomFieldProps) {
   const { field, loading, formItem } = props;
   return formItem.render ? (
     formItem.render(formItem, field, loading)
@@ -19,6 +19,4 @@ const CustomField = (props: CustomFieldProps) => {
       }}
     />
   );
-};
-
-export default CustomField;
+}

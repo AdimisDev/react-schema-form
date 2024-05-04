@@ -1,3 +1,4 @@
+export * from "./src/components/schemaForm/interface";
 import "./src/index.css";
 import {
   SchemaForm,
@@ -18,7 +19,6 @@ import {
   updateFieldVisibility,
 } from "./src/components/schemaForm/index";
 
-export * from "./src/components/schemaForm/interface";
 export {
   SchemaForm,
   MultiStepSchemaForm,

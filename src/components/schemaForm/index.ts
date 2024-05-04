@@ -1,14 +1,14 @@
 import { SchemaForm } from "./SchemaForm/SchemaForm";
 import { MultiStepSchemaForm } from "./MultiStepSchemaForm/MultiStepForm";
 import { useFormState } from "./hooks/useFormState";
-import CustomField from "./fields/CustomField";
+import { CustomField } from "./fields/CustomField";
 import {
   TextField,
   SelectField,
   TextAreaField,
   RadioGroupField,
   DateField,
-} from "./fields/Fields";
+} from "@/components/schemaForm/fields/Fields";
 import renderField from "./fields/renderField";
 import { checkRemoveValidationCondition } from "./utils/checkRemoveValidationCondition";
 import { generateDynamicSchema } from "./utils/generateDynamicSchema";
