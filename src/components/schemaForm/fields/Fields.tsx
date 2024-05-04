@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ControllerRenderProps, FieldValues } from "react-hook-form";
 import { FieldProps } from "../interface";
+import "../../../index.css";
 
 const TextField: React.FC<FieldProps> = ({ field, formItem, loading }) => (
   <Input

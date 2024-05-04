@@ -8,6 +8,7 @@ import {
   TextAreaField,
 } from "./Fields";
 import { ControllerRenderProps, FieldValues } from "react-hook-form";
+import "../../../index.css";
 
 const renderField = (
   formItem: IFieldSchema,

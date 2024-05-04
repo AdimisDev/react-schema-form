@@ -1,5 +1,6 @@
 import { CustomFieldProps } from "@/components/schemaForm/interface";
 import { Input } from "@/components/ui/input";
+import "../../../index.css";
 
 export function CustomField(props: CustomFieldProps) {
   const { field, loading, formItem } = props;

@@ -1,5 +1,4 @@
 export * from "./src/components/schemaForm/interface";
-import "./src/index.css";
 import {
   SchemaForm,
   MultiStepSchemaForm,
