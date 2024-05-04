@@ -16,9 +16,17 @@ function SchemaFormFooter({
   canRemoveValidationFor,
   footerClassName,
 }: SchemaFormFooterProps) {
-  const emptyPersistedFormState = () =>
-    localStorage.removeItem(formKey.toString());
-
+  const emptyPersistedFormState = () => {
+    if (
+      typeof window !== "undefined" &&
+      window.localStorage &&
+      window.sessionStorage
+    ) {
+      window.localStorage.removeItem(formKey.toString());
+      window.sessionStorage.removeItem(formKey.toString());
+    }
+  };
+  
   return renderFooter ? (
     <React.Fragment>
       {renderFooter(
