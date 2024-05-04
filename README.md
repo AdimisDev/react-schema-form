@@ -9,7 +9,6 @@ Effortlessly create dynamic forms in React applications with @adimis/react-schem
 - **Customizable Styling**: Style your forms with Shadcn UI to ensure they match your application's design.
 - **TypeScript Support**: Benefit from TypeScript's static typing to catch errors at compile time.
 - **DevTools**: Debug forms with built-in development tools to streamline troubleshooting.
-- **NextJs Support**: Can be used on the client side of your NextJs app.
 
 ## Tech Stack
 
