@@ -1,9 +1,10 @@
-import { IFieldSchema } from "../interface";
 import { checkRemoveValidationCondition } from "./checkRemoveValidationCondition";
+import { IFieldSchema } from "@/form.interface";
+import { FieldErrors, FieldValues } from "react-hook-form";
 
-export function onErrorRemoveValidationCheck(
-  errors: Record<string, any>,
-  schema: IFieldSchema[],
+export function onErrorRemoveValidationCheck<TFieldValues extends FieldValues>(
+  errors: FieldErrors<TFieldValues>,
+  schema: IFieldSchema<TFieldValues>[],
   formResponse: Record<string, any>,
   setCanRemoveValidationFor: React.Dispatch<
     React.SetStateAction<Record<string, boolean>>
@@ -55,8 +56,8 @@ export function onErrorRemoveValidationCheck(
   }
 }
 
-export function onChangeRemoveValidationCheck(
-  schema: IFieldSchema[],
+export function onChangeRemoveValidationCheck<TFieldValues extends FieldValues>(
+  schema: IFieldSchema<TFieldValues>[],
   formResponse: Record<string, any>,
   setCanRemoveValidationFor: React.Dispatch<
     React.SetStateAction<Record<string, boolean>>

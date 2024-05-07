@@ -1,36 +1,26 @@
 "use client";
 
-import React from "react";
 import { z } from "zod";
-import { Button } from "./components/ui/button";
-import { ISchemaFormProps, ThemeColors } from "./components/schemaForm/interface";
-import { SchemaForm } from "./components/schemaForm";
+import ShadcnForm from "./components/ShadcnForm";
+import { IShadcnSchemaFormProps, ThemeColors } from "./form.interface";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./components/ui/select";
+
+interface SignUp {
+  username: string;
+  email: string;
+  address: string;
+  phone: string;
+  password: string;
+  gender: string;
+}
 
 const App = () => {
-  const formValidations = {
-    username: z
-      .string()
-      .min(1, "Username is required")
-      .max(20, "Username must not exceed 20 characters"),
-    email: z
-      .string()
-      .email("Enter a valid email address")
-      .min(1, "Email is required"),
-    address: z
-      .string()
-      .min(10, "Address should be at least 10 characters")
-      .min(1, "Address is required"),
-    phone: z
-      .string()
-      .regex(/^\+?(\d.*){10,}$/, "Enter a valid phone number")
-      .min(1, "Phone number is required"),
-    password: z
-      .string()
-      .min(8, "Password should be at least 8 characters")
-      .max(20, "Password must not exceed 20 characters"),
-    terms: z.boolean(),
-  };
-
   const defaultThemeColors: ThemeColors = {
     root: {
       background: "0 0% 100%",
@@ -77,139 +67,106 @@ const App = () => {
     },
   };
 
-  const schemaFormProps: ISchemaFormProps = {
+  const schemaFormProps: IShadcnSchemaFormProps<SignUp> = {
     formName: "example-form",
-    panel: true,
-    theme: "light",
+    card: true,
+    theme: "dark",
     themeColors: defaultThemeColors,
     schema: [
       {
         key: "username",
         title: "Username",
-        helpText: "Enter your username",
+        description: "Enter your desired username.",
         autoComplete: "username",
         type: "text",
-        placeholder: "Enter your username",
+        placeholder: "Your username",
         defaultValue: "",
-        disabled: false,
-        validations: formValidations.username,
+        validations: z
+          .string()
+          .min(1, "Username is required")
+          .max(20, "Username must not exceed 20 characters"),
       },
       {
         key: "email",
         title: "Email",
-        helpText: "Enter your email",
+        description: "Enter your email address.",
         autoComplete: "email",
         type: "email",
-        placeholder: "Enter your email",
+        placeholder: "Your email",
         defaultValue: "",
-        disabled: false,
-        validations: formValidations.email,
+        validations: z
+          .string()
+          .email("Enter a valid email address")
+          .min(1, "Email is required"),
       },
       {
-        key: "password",
-        title: "Password",
-        helpText: "Enter your password",
-        type: "password",
-        placeholder: "Enter your password",
-        defaultValue: "",
-        autoComplete: "current-password",
-        disabled: false,
-        validations: formValidations.password,
-        displayConditions: [
+        key: "gender",
+        type: "select",
+        options: [
           {
-            dependentField: "email",
-            dependentFieldValue: "admin@adimis.in",
-            operator: "===",
+            label: "Male",
+            value: "male",
+          },
+          {
+            label: "Female",
+            value: "female",
           },
         ],
-        removeValidationConditions: [
-          {
-            dependentField: "email",
-            dependentFieldValue: "admin@adimis.in",
-            operator: "!==",
-          },
-        ],
+        defaultValue: "male",
+        placeholder: "Your gender",
+        render: (formItem, field) => (
+          <Select disabled={formItem.disabled} {...field}>
+            <SelectTrigger>
+              <SelectValue
+                placeholder={formItem.placeholder || "Select option"}
+              />
+            </SelectTrigger>
+            <SelectContent position="popper">
+              {formItem.options?.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        ),
       },
       {
         key: "address",
         title: "Address",
-        helpText: "Enter your address",
-        autoComplete: "address-level1",
+        description: "Enter your full address.",
+        autoComplete: "address-line1",
         type: "text",
-        placeholder: "1234 Main St",
+        placeholder: "Your address",
         defaultValue: "",
-        disabled: false,
-        validations: formValidations.address,
+        validations: z
+          .string()
+          .min(10, "Address should be at least 10 characters"),
       },
       {
         key: "phone",
-        title: "Phone Number",
+        title: "Phone",
+        description: "Enter your phone number with country code.",
         autoComplete: "tel",
-        helpText: "Enter your phone number",
         type: "tel",
-        placeholder: "Enter your phone number",
+        placeholder: "+1234567890",
         defaultValue: "",
-        disabled: false,
-        validations: formValidations.phone,
+        validations: z
+          .string()
+          .regex(/^\+?(\d.*){10,}$/, "Enter a valid phone number"),
       },
       {
-        key: "date",
-        title: "Date",
-        helpText: "Enter your birth date",
-        type: "date",
-        placeholder: "Enter your birth date",
-        disabled: false,
-      },
-      {
-        key: "select",
-        title: "Select",
-        helpText: "Enter your gender",
-        type: "select",
-        placeholder: "Enter your gender",
-        options: [
-          {
-            label: "Male",
-            value: "male",
-          },
-          {
-            label: "Female",
-            value: "female",
-          },
-        ],
-        disabled: false,
-      },
-      {
-        key: "username2",
-        title: "Username",
-        helpText: "Enter your username",
-        autoComplete: "username",
-        type: "text",
-        placeholder: "Enter your username",
-        defaultValue: "",
-        disabled: false,
-        validations: formValidations.username,
-      },
-      {
-        key: "email2",
-        title: "Email",
-        helpText: "Enter your email",
-        autoComplete: "email",
-        type: "email",
-        placeholder: "Enter your email",
-        defaultValue: "",
-        disabled: false,
-        validations: formValidations.email,
-      },
-      {
-        key: "password2",
+        key: "password",
         title: "Password",
-        helpText: "Enter your password",
+        description: "Enter a strong password.",
+        autoComplete: "new-password",
         type: "password",
-        placeholder: "Enter your password",
+        placeholder: "Your password",
         defaultValue: "",
-        autoComplete: "current-password",
-        disabled: false,
-        validations: formValidations.password,
+        validations: z
+          .string()
+          .min(8, "Password should be at least 8 characters")
+          .max(20, "Password must not exceed 20 characters"),
         displayConditions: [
           {
             dependentField: "email",
@@ -225,58 +182,13 @@ const App = () => {
           },
         ],
       },
-      {
-        key: "address2",
-        title: "Address",
-        helpText: "Enter your address",
-        autoComplete: "address-level1",
-        type: "text",
-        placeholder: "1234 Main St",
-        defaultValue: "",
-        disabled: false,
-        validations: formValidations.address,
-      },
-      {
-        key: "phone2",
-        title: "Phone Number",
-        autoComplete: "tel",
-        helpText: "Enter your phone number",
-        type: "tel",
-        placeholder: "Enter your phone number",
-        defaultValue: "",
-        disabled: false,
-        validations: formValidations.phone,
-      },
-      {
-        key: "date2",
-        title: "Date",
-        helpText: "Enter your birth date",
-        type: "date",
-        placeholder: "Enter your birth date",
-        disabled: false,
-      },
-      {
-        key: "select2",
-        title: "Select",
-        helpText: "Enter your gender",
-        type: "select",
-        placeholder: "Enter your gender",
-        options: [
-          {
-            label: "Male",
-            value: "male",
-          },
-          {
-            label: "Female",
-            value: "female",
-          },
-        ],
-        disabled: false,
-      },
     ],
     persistFormResponse: "sessionStorage",
-    width: "100%",
     devTools: true,
+    defaultValues: {
+      email: "adimis.ai.001@gmail.com",
+      phone: "919625183597",
+    },
     onChange: (formResponse, fieldValidations, canIgnoreErrors) =>
       console.log(
         "Form OnChange: ",
@@ -285,97 +197,18 @@ const App = () => {
         canIgnoreErrors
       ),
     onSubmit: (values) =>
-      console.log("On Submit Example Form Response: ", JSON.stringify(values)),
-    renderButtons: (formData, handleSubmit) => {
-      const buttons: React.ReactNode[] = [];
-
-      buttons.push(
-        <Button
-          variant={"primary"}
-          key="External Submit"
-          onClick={() =>
-            handleSubmit((formData) =>
-              console.log("External Submit With Validation:", formData)
-            )()
-          }
-          className="w-full"
-        >
-          External Submit
-        </Button>
-      );
-
-      if (formData.email && formData.email.trim()) {
-        buttons.push(
-          <Button
-            variant={"outline"}
-            key="special"
-            onClick={() => console.log("Special action for email", formData)}
-            className="w-full"
-          >
-            Special Email Action
-          </Button>
-        );
-      }
-
-      if (Object.keys(formData).length > 0) {
-        buttons.push(
-          <Button
-            variant={"destructive"}
-            key="reset"
-            onClick={() =>
-              handleSubmit((formData) =>
-                console.log("External Reset With Validation:", formData)
-              )()
-            }
-            className="w-full"
-          >
-            Reset
-          </Button>
-        );
-      }
-
-      return buttons;
-    },
-    checkboxes: {
-      className: "flex justify-between items-center gap-4 mt-5",
-      items: [
-        {
-          key: "terms",
-          title: "Accept terms and conditions",
-          validations: formValidations.terms,
-          type: "boolean",
-        },
-        {
-          key: "privacy_policy",
-          defaultValue: false,
-          title: "Accept privacy policies",
-        },
-        {
-          key: "privacy_policy_new",
-          defaultValue: false,
-          title: "Accept privacy policies",
-        },
-      ],
-    },
-    links: (
-      <div className="w-full flex justify-between items-center mt-5">
-        <a
-          href="/"
-          className="underline underline-offset-2 cursor-pointer hover:text-black/70"
-        >
-          Privacy Policy
-        </a>
-        <a
-          href="/"
-          className="underline underline-offset-2 cursor-pointer hover:text-black/70"
-        >
-          Terms and Condition
-        </a>
-      </div>
-    ),
+      console.log(
+        "On Submit Example Form Response: ",
+        JSON.stringify(values, null, 4)
+      ),
+    onInvalidSubmit: (values) =>
+      console.log(
+        "On Submit Invalid Example Form Response: ",
+        JSON.stringify(values, null, 4)
+      ),
   };
 
-  return <SchemaForm {...schemaFormProps} />;
+  return <ShadcnForm {...schemaFormProps} />;
 };
 
 export default App;

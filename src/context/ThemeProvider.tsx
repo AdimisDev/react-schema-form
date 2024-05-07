@@ -1,10 +1,10 @@
-import { createContext, useContext, useEffect, useState } from "react";
 import {
+  ThemeProviderState,
+  ThemeProviderProps,
   Theme,
   ThemeColors,
-  ThemeProviderProps,
-  ThemeProviderState,
-} from "../interface";
+} from "@/form.interface";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const initialState: ThemeProviderState = {
   theme: "system",
