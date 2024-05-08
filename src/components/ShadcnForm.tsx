@@ -44,6 +44,7 @@ const ShadcnFormBody = <TFieldValues extends FieldValues>({
     formKey,
     formDescription,
     visibleFields,
+    formDisabled,
     submitButtonLoading,
     handleOnInvalidSubmit,
     handleOnSubmit,
@@ -94,36 +95,39 @@ const ShadcnFormBody = <TFieldValues extends FieldValues>({
               {formFields.map((formField) => {
                 if (visibleFields?.has(formField.key)) {
                   return (
-                    <FormField
-                      key={formField.key}
-                      control={formMethods.control}
-                      name={formField.key}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{formField.title}</FormLabel>
-                          <FormControl>
-                            {formField.render ? (
-                              formField.render(
-                                formField,
-                                field,
-                                formMethods,
-                                useFieldArrayGetter
-                              )
-                            ) : (
-                              <Input
-                                type={formField.type}
-                                placeholder={formField.placeholder}
-                                {...field}
-                              />
-                            )}
-                          </FormControl>
-                          <FormDescription>
-                            {formField.description}
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <div className="mt-3">
+                      <FormField
+                        key={formField.key}
+                        control={formMethods.control}
+                        name={formField.key}
+                        disabled={formDisabled}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{formField.title}</FormLabel>
+                            <FormControl>
+                              {formField.render ? (
+                                formField.render(
+                                  formField,
+                                  field,
+                                  formMethods,
+                                  useFieldArrayGetter
+                                )
+                              ) : (
+                                <Input
+                                  type={formField.type}
+                                  placeholder={formField.placeholder}
+                                  {...field}
+                                />
+                              )}
+                            </FormControl>
+                            <FormDescription>
+                              {formField.description}
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   );
                 }
               })}
@@ -137,7 +141,7 @@ const ShadcnFormBody = <TFieldValues extends FieldValues>({
                 <Button
                   type="submit"
                   loading={submitButtonLoading}
-                  disabled={disableSubmitButton}
+                  disabled={formDisabled ?? disableSubmitButton}
                   className={submitButtonClassName}
                   style={submitButtonStyle}
                 >

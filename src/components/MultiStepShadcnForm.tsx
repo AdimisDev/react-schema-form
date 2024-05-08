@@ -44,6 +44,7 @@ const MultiStepShadcnFormBody = <TFieldValues extends FieldValues>({
     formKey,
     formDescription,
     visibleFields,
+    formDisabled,
     submitButtonLoading,
     handleOnInvalidSubmit,
     handleOnSubmit,
@@ -130,36 +131,39 @@ const MultiStepShadcnFormBody = <TFieldValues extends FieldValues>({
                           if (!formItem) return null;
 
                           return (
-                            <FormField
-                              key={formItem.key}
-                              control={formMethods.control}
-                              name={formItem.key}
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>{formItem.title}</FormLabel>
-                                  <FormControl>
-                                    {formItem.render ? (
-                                      formItem.render(
-                                        formItem,
-                                        field,
-                                        formMethods,
-                                        useFieldArrayGetter
-                                      )
-                                    ) : (
-                                      <Input
-                                        type={formItem.type}
-                                        placeholder={formItem.placeholder}
-                                        {...field}
-                                      />
-                                    )}
-                                  </FormControl>
-                                  <FormDescription>
-                                    {formItem.description}
-                                  </FormDescription>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
+                            <div className="mt-3">
+                              <FormField
+                                key={formItem.key}
+                                control={formMethods.control}
+                                name={formItem.key}
+                                disabled={formDisabled}
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>{formItem.title}</FormLabel>
+                                    <FormControl>
+                                      {formItem.render ? (
+                                        formItem.render(
+                                          formItem,
+                                          field,
+                                          formMethods,
+                                          useFieldArrayGetter
+                                        )
+                                      ) : (
+                                        <Input
+                                          type={formItem.type}
+                                          placeholder={formItem.placeholder}
+                                          {...field}
+                                        />
+                                      )}
+                                    </FormControl>
+                                    <FormDescription>
+                                      {formItem.description}
+                                    </FormDescription>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
                           );
                         })}
                     </React.Fragment>
@@ -175,19 +179,31 @@ const MultiStepShadcnFormBody = <TFieldValues extends FieldValues>({
                   Prev
                 </Button>
                 {isLastStep ? (
-                  !hideSubmitButton && (
+                  formDisabled ? (
                     <Button
-                      type="submit"
-                      loading={submitButtonLoading}
-                      disabled={disableSubmitButton}
+                      disabled={true}
                       className={submitButtonClassName}
                       style={submitButtonStyle}
                     >
-                      Submit
+                      Next
                     </Button>
+                  ) : (
+                    !hideSubmitButton && (
+                      <Button
+                        type="submit"
+                        loading={submitButtonLoading}
+                        disabled={disableSubmitButton}
+                        className={submitButtonClassName}
+                        style={submitButtonStyle}
+                      >
+                        Submit
+                      </Button>
+                    )
                   )
                 ) : (
-                  <Button onClick={handleNext}>Next</Button>
+                  <Button onClick={handleNext} disabled={isLastStep}>
+                    Next
+                  </Button>
                 )}
               </Footer>
             </TabsContent>

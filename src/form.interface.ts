@@ -93,6 +93,7 @@ export interface ISchemaFormProps<TFieldValues extends FieldValues> {
   criteriaMode?: CriteriaMode;
   formStyle?: React.CSSProperties;
   formClassName?: string;
+  formDisabled?: boolean;
   onSubmit?: (values: TFieldValues) => Promise<void> | void;
   onInvalidSubmit?: SubmitErrorHandler<TFieldValues>;
   onChange?: (
@@ -110,6 +111,7 @@ export interface FormContextType<TFieldValues extends FieldValues> {
   formFields: IFieldSchema<TFieldValues>[];
   formMethods: UseFormReturn<TFieldValues>;
   visibleFields: Set<Path<TFieldValues>>;
+  formDisabled: boolean;
   submitButtonLoading: boolean;
   handleOnSubmit: (values: TFieldValues) => void;
   handleOnInvalidSubmit: (errors: FieldErrors<TFieldValues>) => void;

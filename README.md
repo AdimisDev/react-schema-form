@@ -1,6 +1,6 @@
 # @adimis/react-schema-form
 
-The `@adimis/react-schema-form` is a React component library that provides a schema-based approach to form creation, leveraging Shadcn components for styling. This package simplifies the development of complex forms within React 18.2.0 or Next.js App Router 14.2.3 environments, incorporating Zod for robust form validation capabilities.
+The `@adimis/react-schema-form` is a React component library that provides a schema-based approach to form creation, built using React, Typescript, React Hook Form and Shadcn components for styling. This package simplifies the development of complex forms within React 18.2.0 or Next.js App Router 14.2.3 environments, incorporating Zod for robust form validation capabilities.
 
 ## Features
 

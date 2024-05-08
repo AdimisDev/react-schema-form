@@ -162,6 +162,7 @@ export const useSchemaForm = <TFieldValues extends FieldValues>(
     formMethods,
     visibleFields,
     submitButtonLoading,
+    formDisabled: props.formDisabled ? true : false,
     handleOnSubmit,
     handleOnInvalidSubmit,
     useFieldArrayGetter,
