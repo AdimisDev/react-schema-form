@@ -2,6 +2,7 @@ import "./src/index.css";
 
 // Shadcn Styled Form
 import ShadcnForm from "./src/components/ShadcnForm";
+import MultiStepShadcnForm from "@/components/MultiStepShadcnForm";
 import {
   Select,
   SelectContent,
@@ -18,6 +19,7 @@ import SchemaFormProvider, {
 export * from "./src/form.interface";
 export {
   ShadcnForm,
+  MultiStepShadcnForm,
   SchemaFormProvider,
   useSchemaFormContext,
   Select,
