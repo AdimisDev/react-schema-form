@@ -110,6 +110,7 @@ const App = () => {
       },
       {
         key: "gender",
+        title: "Gender",
         type: "select",
         options: [
           {
@@ -266,6 +267,7 @@ const App = () => {
       },
       {
         key: "gender",
+        title: "Gender",
         type: "select",
         options: [
           {

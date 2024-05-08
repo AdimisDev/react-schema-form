@@ -3,13 +3,6 @@ import "./src/index.css";
 // Shadcn Styled Form
 import ShadcnForm from "./src/components/ShadcnForm";
 import MultiStepShadcnForm from "@/components/MultiStepShadcnForm";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./src/components/ui/select";
 
 // Context To Create Your Own Form
 import SchemaFormProvider, {
@@ -22,9 +15,4 @@ export {
   MultiStepShadcnForm,
   SchemaFormProvider,
   useSchemaFormContext,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
 };
