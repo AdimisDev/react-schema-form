@@ -25,18 +25,22 @@ import { IShadcnSchemaFormProps } from "@/form.interface";
 import { ThemeProvider, useTheme } from "@/context/ThemeProvider";
 
 const ShadcnFormBody = <TFieldValues extends FieldValues>({
-  card,
+  card = true,
   theme,
   renderHeader,
   renderFormFields,
   renderFooter,
+  submitButtonClassName,
+  submitButtonStyle,
+  disableSubmitButton = false,
+  hideSubmitButton = false,
 }: IShadcnSchemaFormProps<TFieldValues>) => {
   const { setTheme } = useTheme();
   const formContext = useSchemaFormContext<TFieldValues>();
   const {
     formMethods,
     formFields,
-    formTitle,
+    formLabel,
     formKey,
     formDescription,
     visibleFields,
@@ -69,7 +73,7 @@ const ShadcnFormBody = <TFieldValues extends FieldValues>({
             renderHeader(formContext)
           ) : (
             <React.Fragment>
-              <Title>{formTitle}</Title>
+              <Title>{formLabel}</Title>
               <Description>{formDescription}</Description>
             </React.Fragment>
           )}
@@ -127,13 +131,19 @@ const ShadcnFormBody = <TFieldValues extends FieldValues>({
           )}
         </Content>
         <Footer>
-          {renderFooter ? (
-            renderFooter(formContext)
-          ) : (
-            <Button type="submit" loading={submitButtonLoading}>
-              Submit
-            </Button>
-          )}
+          {renderFooter
+            ? renderFooter(formContext)
+            : !hideSubmitButton && (
+                <Button
+                  type="submit"
+                  loading={submitButtonLoading}
+                  disabled={disableSubmitButton}
+                  className={submitButtonClassName}
+                  style={submitButtonStyle}
+                >
+                  Submit
+                </Button>
+              )}
         </Footer>
       </Container>
     </form>

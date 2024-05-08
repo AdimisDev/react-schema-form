@@ -73,6 +73,7 @@ export type AsyncDefaultValues<TFieldValues> = (
 
 export interface ISchemaFormProps<TFieldValues extends FieldValues> {
   formName: string;
+  formLabel: string;
   formDescription?: string;
   schema: IFieldSchema<TFieldValues>[];
   defaultValues?:
@@ -92,10 +93,7 @@ export interface ISchemaFormProps<TFieldValues extends FieldValues> {
   criteriaMode?: CriteriaMode;
   formStyle?: React.CSSProperties;
   formClassName?: string;
-  onSubmit?: (response: {
-    success?: TFieldValues;
-    errors?: FieldErrors<TFieldValues>;
-  }) => Promise<void> | void;
+  onSubmit?: (values: TFieldValues) => Promise<void> | void;
   onInvalidSubmit?: SubmitErrorHandler<TFieldValues>;
   onChange?: (
     formResponse: DeepPartialSkipArrayKey<TFieldValues>,
@@ -105,7 +103,8 @@ export interface ISchemaFormProps<TFieldValues extends FieldValues> {
 }
 
 export interface FormContextType<TFieldValues extends FieldValues> {
-  formTitle: string;
+  formLabel: string;
+  formName: string;
   formKey: string;
   formDescription?: string;
   formFields: IFieldSchema<TFieldValues>[];
@@ -129,6 +128,10 @@ export interface IShadcnSchemaFormProps<TFieldValues extends FieldValues>
   card?: boolean;
   theme?: Theme;
   themeColors?: ThemeColors;
+  hideSubmitButton?: boolean;
+  disableSubmitButton?: boolean;
+  submitButtonStyle?: React.CSSProperties;
+  submitButtonClassName?: string;
   renderHeader?: (
     formContext: FormContextType<TFieldValues>
   ) => React.ReactNode;
@@ -166,6 +169,18 @@ export interface IShadcnSchemaFormProps<TFieldValues extends FieldValues>
         React.RefAttributes<HTMLParagraphElement>
     >
   ) => React.ReactNode;
+}
+
+export interface IMultiStepShadcnSchemaFormProps<
+  TFieldValues extends FieldValues
+> extends IShadcnSchemaFormProps<TFieldValues> {
+  multiStepFormSteps: Record<
+    string,
+    {
+      stageLabel?: string;
+      fields?: IFieldSchema<TFieldValues>["key"][];
+    }
+  >;
 }
 
 // SECTION: Theme Interfaces

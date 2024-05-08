@@ -9,7 +9,8 @@ const SchemaFormProvider = <TFieldValues extends FieldValues>(
   props: ISchemaFormProps<TFieldValues> & { children: React.ReactNode }
 ): JSX.Element => {
   const {
-    formTitle,
+    formLabel,
+    formName,
     formKey,
     formDescription,
     formFields,
@@ -26,7 +27,8 @@ const SchemaFormProvider = <TFieldValues extends FieldValues>(
   return (
     <FormContext.Provider
       value={{
-        formTitle,
+        formLabel,
+        formName,
         formKey,
         formDescription,
         formFields,

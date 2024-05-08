@@ -154,7 +154,8 @@ export const useSchemaForm = <TFieldValues extends FieldValues>(
   }, [formValues, formKey, props]);
 
   return {
-    formTitle: props.formName,
+    formLabel: props.formLabel,
+    formName: props.formName,
     formKey,
     formDescription: props.formDescription,
     formFields: props.schema,
