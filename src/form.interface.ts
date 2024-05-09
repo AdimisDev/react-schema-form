@@ -41,7 +41,7 @@ export interface IFieldSchema<TFieldValues extends FieldValues> {
   defaultValue?: TFieldValues[Path<TFieldValues>];
   options?: Array<{
     label: string;
-    value: TFieldValues[Path<TFieldValues>];
+    value: string;
   }>;
   disabled?: boolean;
   validations?: z.ZodType<TFieldValues[Path<TFieldValues>], any>;

@@ -26,6 +26,14 @@ interface SignUp {
   phone: string;
   password: string;
   gender: string;
+  terms: boolean;
+  enums: {
+    label: string;
+    value: string;
+  };
+  file: File;
+  date: Date;
+  year: number;
 }
 
 const App = () => {
@@ -125,7 +133,13 @@ const App = () => {
         defaultValue: "male",
         placeholder: "Your gender",
         render: (formItem, field) => (
-          <Select disabled={formItem.disabled} {...field}>
+          <Select
+            disabled={formItem.disabled}
+            value={field.value as string}
+            defaultValue={formItem.defaultValue as string}
+            onValueChange={(value) => field.onChange(value)}
+            autoComplete={formItem.autoComplete}
+          >
             <SelectTrigger>
               <SelectValue
                 placeholder={formItem.placeholder || "Select option"}
@@ -140,6 +154,12 @@ const App = () => {
             </SelectContent>
           </Select>
         ),
+        validations: z
+          .string()
+          .default("male")
+          .refine((val) => val === "male", {
+            message: "Only 'Male' is a valid option",
+          }),
       },
       {
         key: "address",
@@ -284,7 +304,13 @@ const App = () => {
         defaultValue: "male",
         placeholder: "Your gender",
         render: (formItem, field) => (
-          <Select disabled={formItem.disabled} {...field}>
+          <Select
+            disabled={formItem.disabled}
+            value={field.value as string}
+            defaultValue={formItem.defaultValue as string}
+            onValueChange={(value) => field.onChange(value)}
+            autoComplete={formItem.autoComplete}
+          >
             <SelectTrigger>
               <SelectValue
                 placeholder={formItem.placeholder || "Select option"}
@@ -299,6 +325,12 @@ const App = () => {
             </SelectContent>
           </Select>
         ),
+        validations: z
+          .string()
+          .default("male")
+          .refine((val) => val === "male", {
+            message: "Only 'Male' is a valid option",
+          }),
       },
       {
         key: "address",
