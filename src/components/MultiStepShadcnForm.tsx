@@ -131,7 +131,7 @@ const MultiStepShadcnFormBody = <TFieldValues extends FieldValues>({
                           if (!formItem) return null;
 
                           return (
-                            <div className="mt-3">
+                            <div className="mt-3" key={`${formItem.key}-div`}>
                               <FormField
                                 key={formItem.key}
                                 control={formMethods.control}

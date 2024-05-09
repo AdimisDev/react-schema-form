@@ -95,7 +95,7 @@ const ShadcnFormBody = <TFieldValues extends FieldValues>({
               {formFields.map((formField) => {
                 if (visibleFields?.has(formField.key)) {
                   return (
-                    <div className="mt-3">
+                    <div className="mt-3" key={`${formField.key}-div`}>
                       <FormField
                         key={formField.key}
                         control={formMethods.control}
