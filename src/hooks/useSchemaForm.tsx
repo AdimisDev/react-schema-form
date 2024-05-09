@@ -23,6 +23,7 @@ import { getInitialValues } from "@/lib/utils/getInitialValues";
 import { handleStorage } from "@/lib/utils/handleStorage";
 import { useFormValues } from "./useFormValues";
 import { useFieldValues } from "./useFieldValues";
+import useEnterKeySubmit from "./useEnterKeySubmit";
 
 export const useSchemaForm = <TFieldValues extends FieldValues>(
   props: ISchemaFormProps<TFieldValues>
@@ -152,6 +153,11 @@ export const useSchemaForm = <TFieldValues extends FieldValues>(
       props.persistFormResponse
     );
   }, [formValues, formKey, props]);
+
+  useEnterKeySubmit(
+    formMethods.handleSubmit(handleOnSubmit, handleOnInvalidSubmit),
+    formKey
+  );
 
   return {
     formLabel: props.formLabel,

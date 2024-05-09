@@ -65,6 +65,7 @@ const ShadcnFormBody = <TFieldValues extends FieldValues>({
 
   return (
     <form
+      id={formKey}
       key={formKey}
       onSubmit={formMethods.handleSubmit(handleOnSubmit, handleOnInvalidSubmit)}
     >

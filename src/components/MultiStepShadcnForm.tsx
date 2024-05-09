@@ -24,6 +24,7 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
+import useEnterKeySubmit from "@/hooks/useEnterKeySubmit";
 
 const MultiStepShadcnFormBody = <TFieldValues extends FieldValues>({
   card,
@@ -87,8 +88,14 @@ const MultiStepShadcnFormBody = <TFieldValues extends FieldValues>({
     }
   };
 
+  useEnterKeySubmit(
+    formMethods.handleSubmit(handleOnSubmit, handleOnInvalidSubmit),
+    formKey
+  );
+
   return (
     <form
+      id={formKey}
       key={formKey}
       onSubmit={formMethods.handleSubmit(handleOnSubmit, handleOnInvalidSubmit)}
     >

@@ -89,6 +89,7 @@ const App = () => {
     card: true,
     theme: "dark",
     themeColors: defaultThemeColors,
+    formDisabled: false,
     schema: [
       {
         key: "username",
@@ -219,7 +220,6 @@ const App = () => {
       email: "adimis.ai.001@gmail.com",
       phone: "919625183597",
     },
-    formDisabled: true,
     onChange: (formResponse, fieldValidations, canIgnoreErrors) =>
       console.log(
         "Form OnChange: ",
@@ -245,7 +245,7 @@ const App = () => {
     card: true,
     theme: "dark",
     themeColors: defaultThemeColors,
-    formDisabled: true,
+    formDisabled: false,
     multiStepFormSteps: {
       step_1: {
         stageLabel: "Step 1",
