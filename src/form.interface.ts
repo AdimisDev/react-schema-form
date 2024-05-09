@@ -72,7 +72,7 @@ export type AsyncDefaultValues<TFieldValues> = (
 ) => Promise<TFieldValues>;
 
 export interface ISchemaFormProps<TFieldValues extends FieldValues> {
-  formName: string;
+  formSlug: string;
   formLabel: string;
   formDescription?: string;
   schema: IFieldSchema<TFieldValues>[];
@@ -105,7 +105,7 @@ export interface ISchemaFormProps<TFieldValues extends FieldValues> {
 
 export interface FormContextType<TFieldValues extends FieldValues> {
   formLabel: string;
-  formName: string;
+  formSlug: string;
   formKey: string;
   formDescription?: string;
   formFields: IFieldSchema<TFieldValues>[];

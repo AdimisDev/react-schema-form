@@ -28,7 +28,7 @@ import useEnterKeySubmit from "./useEnterKeySubmit";
 export const useSchemaForm = <TFieldValues extends FieldValues>(
   props: ISchemaFormProps<TFieldValues>
 ) => {
-  const formKey = `adimis-schema-form-${props.formName}-${useId()}`;
+  const formKey = `adimis-schema-form-${props.formSlug}-${useId()}`;
   const zodSchema = useMemo(() => {
     return generateDynamicSchema(props.schema);
   }, [props.schema]);
@@ -161,7 +161,7 @@ export const useSchemaForm = <TFieldValues extends FieldValues>(
 
   return {
     formLabel: props.formLabel,
-    formName: props.formName,
+    formSlug: props.formSlug,
     formKey,
     formDescription: props.formDescription,
     formFields: props.schema,

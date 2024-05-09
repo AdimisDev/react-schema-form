@@ -112,7 +112,7 @@ const Form = () => {
 
   const schemaFormProps: IShadcnSchemaFormProps<SignUp> = {
     formLabel: "Example Form",
-    formName: "example-form",
+    formSlug: "example-form",
     card: true,
     theme: "dark",
     themeColors: defaultThemeColors,
@@ -257,7 +257,7 @@ const Form = () => {
 
   const multiStepschemaFormProps: IMultiStepShadcnSchemaFormProps<SignUp> = {
     formLabel: "Example Form",
-    formName: "example-form",
+    formSlug: "example-form",
     card: true,
     theme: "dark",
     themeColors: defaultThemeColors,

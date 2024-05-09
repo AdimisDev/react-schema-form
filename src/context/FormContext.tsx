@@ -10,7 +10,7 @@ const SchemaFormProvider = <TFieldValues extends FieldValues>(
 ): JSX.Element => {
   const {
     formLabel,
-    formName,
+    formSlug,
     formKey,
     formDescription,
     formFields,
@@ -29,7 +29,7 @@ const SchemaFormProvider = <TFieldValues extends FieldValues>(
     <FormContext.Provider
       value={{
         formLabel,
-        formName,
+        formSlug,
         formKey,
         formDescription,
         formFields,

@@ -21,6 +21,7 @@ import {
   CardTitle,
 } from "./ui/card";
 import { Button } from "./ui/button";
+import { DevTool } from "@hookform/devtools";
 import { IShadcnSchemaFormProps } from "@/form.interface";
 import { ThemeProvider, useTheme } from "@/context/ThemeProvider";
 
@@ -34,6 +35,7 @@ const ShadcnFormBody = <TFieldValues extends FieldValues>({
   submitButtonStyle,
   disableSubmitButton = false,
   hideSubmitButton = false,
+  devTools = false,
 }: IShadcnSchemaFormProps<TFieldValues>) => {
   const { setTheme } = useTheme();
   const formContext = useSchemaFormContext<TFieldValues>();
@@ -69,6 +71,7 @@ const ShadcnFormBody = <TFieldValues extends FieldValues>({
       key={formKey}
       onSubmit={formMethods.handleSubmit(handleOnSubmit, handleOnInvalidSubmit)}
     >
+      {devTools && <DevTool control={formMethods.control} />}
       <Container>
         <Header>
           {renderHeader ? (

@@ -24,6 +24,7 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
+import { DevTool } from "@hookform/devtools";
 import useEnterKeySubmit from "@/hooks/useEnterKeySubmit";
 
 const MultiStepShadcnFormBody = <TFieldValues extends FieldValues>({
@@ -35,6 +36,7 @@ const MultiStepShadcnFormBody = <TFieldValues extends FieldValues>({
   disableSubmitButton,
   submitButtonClassName,
   submitButtonStyle,
+  devTools,
 }: IMultiStepShadcnSchemaFormProps<TFieldValues>) => {
   const { setTheme } = useTheme();
   const formContext = useSchemaFormContext<TFieldValues>();
@@ -99,6 +101,7 @@ const MultiStepShadcnFormBody = <TFieldValues extends FieldValues>({
       key={formKey}
       onSubmit={formMethods.handleSubmit(handleOnSubmit, handleOnInvalidSubmit)}
     >
+      {devTools && <DevTool control={formMethods.control} />}
       <Tabs value={currentStep} onValueChange={setCurrentStep}>
         <Container>
           <Header>
